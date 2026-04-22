@@ -10,7 +10,8 @@ public class Index extends javax.swing.JFrame {
     
     public Index() {
         initComponents();
-        reinicarColoresBotones();
+        //reinicarColoresBotones();
+        
         //Declaración de CardLayout y se añade el Layout al panel que contendrá todos
         cardLayout = new CardLayout();
         contGeneral.setLayout(cardLayout);
