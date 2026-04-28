@@ -89,18 +89,42 @@ public class panelCatalogo extends javax.swing.JPanel {
 }
             });
             // Crear un renderer que alinee a la derecha
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(){
+            @Override
+            public Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
 
-        // Aplicarlo a columnas específicas
-        productosTabla.getColumnModel().getColumn(3).setCellRenderer(rightRenderer); // columna costo
-        productosTabla.getColumnModel().getColumn(4).setCellRenderer(rightRenderer); // columna precio
-        productosTabla.getColumnModel().getColumn(5).setCellRenderer(rightRenderer); // columna stock actual
-        productosTabla.getColumnModel().getColumn(6).setCellRenderer(rightRenderer); // columna stock minimo
-        productosTabla.getColumnModel().getColumn(7).setCellRenderer(rightRenderer); // columna Entrega
-        productosTabla.getColumnModel().getColumn(8).setCellRenderer(rightRenderer); // columna Estimacion
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                producto p = listaProductos.get(table.convertRowIndexToModel(row));
 
+                if(!soloActivos){
+                    if (!p.isActivo()) {
+                    c.setBackground(Color.LIGHT_GRAY);
+                    c.setForeground(Color.DARK_GRAY);
+                    } else {
+                        c.setBackground(Color.WHITE);
+                        c.setForeground(Color.BLACK);
+                    }
+                }
 
+                if (isSelected) {
+                    c.setBackground(table.getSelectionBackground());
+                    c.setForeground(table.getSelectionForeground());
+                }
+
+                if (column >= 3 && column <= 8) {
+                setHorizontalAlignment(SwingConstants.RIGHT);
+                }else{
+                    setHorizontalAlignment(SwingConstants.LEFT);
+                }    
+                
+                return c;
+            }
+        };
+
+        for (int i = 0; i < productosTabla.getColumnCount(); i++) {
+            productosTabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
     }
     public void cargarCategorias() throws FileNotFoundException, IOException{
             File archivo = new File("assets/abarrotes.csv");
