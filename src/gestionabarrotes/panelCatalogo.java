@@ -207,8 +207,10 @@ public class panelCatalogo extends javax.swing.JPanel {
     }
     
     private void filtrarTabla() throws IOException {
-    String texto = busquedaProductoTxt.getText().trim();
-
+    String texto = busquedaProductoTxt.getText();
+    
+    modeloProductos.setRowCount(0);
+    
     if (texto.isEmpty()) {
         // mostrar todos
         llenarTabla(soloActivos);
@@ -227,8 +229,8 @@ public class panelCatalogo extends javax.swing.JPanel {
                         p.getCodigo(),
                         p.getNombre(),
                         p.getCategoria().getNombre(),  // nombre visible
-                        p.getCosto(),
-                        p.getPrecio(),
+                        String.format("%.2f",p.getCosto()),
+                        String.format("%.2f",p.getPrecio()),
                         p.getStockActual(),
                         p.getStockMinimo(),
                         p.getTiempoEntrega(),
