@@ -315,9 +315,14 @@ public class registroProducto extends javax.swing.JDialog {
                         }
 
                         if (costo >= precio) {
-                            JOptionPane.showMessageDialog(this, "El costo no puede ser mayor o igual al precio");
-                            return;
-                        }
+                            JOptionPane.showMessageDialog(null,"El costo es mayor que el precio de venta");
+                            int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea registrar este precio?",
+                            "Confirmar registro", JOptionPane.YES_NO_OPTION);
+                            if(opcion == JOptionPane.NO_OPTION){
+                                return;
+                            }
+                        }    
+                           
 
                         if (stockMinimo <= 0) {
                             JOptionPane.showMessageDialog(this, "El stock mínimo debe ser mayor a 0");
@@ -355,8 +360,13 @@ public class registroProducto extends javax.swing.JDialog {
                         }
 
                         if (costo >= precio) {
-                            JOptionPane.showMessageDialog(this, "El costo no puede ser mayor o igual al precio");
-                            return;
+                            JOptionPane.showMessageDialog(null,"El costo es mayor que el precio de venta");
+                            int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea registrar este precio?",
+                            "Confirmar registro", JOptionPane.YES_NO_OPTION);
+                            if(opcion == JOptionPane.NO_OPTION){
+                                return;
+                            }
+                            
                         }
 
                         if (stockMinimo <= 0) {
@@ -488,8 +498,8 @@ public class registroProducto extends javax.swing.JDialog {
         codigoProductoTxt.setText(p.getCodigo());
         nombreProductoTxt.setText(p.getNombre());
         categoriaProductoCombo.setSelectedItem(p.getCategoria());
-        costoProductoTxt.setText(String.valueOf(p.getCosto()));
-        precioProductoTxt.setText(String.valueOf(p.getPrecio()));
+        costoProductoTxt.setText(String.format("%.2f",p.getCosto()));
+        precioProductoTxt.setText(String.format("%.2f",p.getPrecio()));
         stockActualProductoTxt.setText(String.valueOf(p.getStockActual()));
         stockMinimoProductoTxt.setText(String.valueOf(p.getStockMinimo()));
         tiempoEntregaProductoTxt.setText(String.valueOf(p.getTiempoEntrega()));

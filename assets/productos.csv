@@ -1,8 +1,8 @@
 codigo,nombre,categoria,costo,precio,stockActual,stockMinimo,tiempoEntrega,estimacionDemanda,activo
 000078,Wiskas 20KG,ABAR15,520.0,600.0,20,8,4,15,false
-078,Aceite,ABAR01,20.0,25.0,30,10,4,7,true
+078,Aceite,ABAR01,32.0,40.0,30,10,4,7,true
 079,Frijol,ABAR01,10.0,15.0,3,10,1,1,false
-055,Atún,ABAR01,23.0,25.0,20,10,7,15,true
+055,Atún,ABAR01,23.0,15.0,20,10,7,15,true
 012,Sobre Wiskas - Atun,ABAR15,8.0,12.0,37,20,14,40,true
 07540,Sabritas,ABAR05,15.0,18.0,2,2,1,100,true
 0121,Aceite,ABAR01,32.0,42.0,0,1,1,40,true

@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.csv.CSVFormat;
@@ -26,7 +28,6 @@ public class panelCatalogo extends javax.swing.JPanel {
     public ArrayList<producto> listaProductos = new ArrayList<>();
     public ArrayList<objetoCategoria> listaCategoria = new ArrayList<>();
     public DefaultComboBoxModel<objetoCategoria> modeloCategorias = new DefaultComboBoxModel<>();
-    private javax.swing.JComboBox<objetoCategoria> categoriaProductoCombo;
     public Color[] colores = new Color[4];
     
     public String codigoProducto;
@@ -34,67 +35,23 @@ public class panelCatalogo extends javax.swing.JPanel {
     
     public panelCatalogo(Color[] colores) throws IOException {
         initComponents();
-        
-        categoriaProductoCombo = new javax.swing.JComboBox<>();
         this.colores = colores;
         
         setBackground(colores[1]);
         
-        String[] columnas = {"Codigo", "Nombre", "Categoria de Producto","Costo","Precio"
-                ,"Stock Actual","Stock Minimo","Tiempo de Entrega","Estimación de Demanda Actual"};
+        String[] columnas = {"Codigo", "Nombre", "Categoria","Costo","Precio"
+                ,"Stock Actual","Stock Minimo","Entrega","Estimación"};
         modeloProductos = new DefaultTableModel(columnas, 0);
         productosTabla.setModel(modeloProductos);
         
         cargarCategorias();
-        
-        categoriaProductoCombo.setModel(modeloCategorias);
         modeloCategorias.addElement(null);
-        
-        categoriaProductoCombo.setBounds(420, 45, 180, 30);
-        add(categoriaProductoCombo);
-        panelBusquedaProducto.add(categoriaProductoCombo);
           
         for(objetoCategoria cat : listaCategoria){
             modeloCategorias.addElement(cat);
         }
         
         llenarTabla(soloActivos);
-        if(!soloActivos){
-            
-            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
-                    boolean isSelected, boolean hasFocus, int row, int column) {
-
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-                // Obtener el producto correspondiente a la fila
-                producto p = listaProductos.get(table.convertRowIndexToModel(row));
-
-                    if (!p.isActivo()) {
-                        // Producto desactivado → gris
-                        c.setBackground(Color.LIGHT_GRAY);
-                        c.setForeground(Color.DARK_GRAY);
-                    } else {
-                        // Producto activo → colores normales
-                        if (isSelected) {
-                            c.setBackground(table.getSelectionBackground());
-                            c.setForeground(table.getSelectionForeground());
-                        } else {
-                            c.setBackground(Color.WHITE);
-                            c.setForeground(Color.BLACK);
-                        }
-                    }
-
-                    return c;
-                    }
-                };
-
-            // Aplicar el renderer a todas las columnas
-            for (int i = 0; i < productosTabla.getColumnCount(); i++) {
-                productosTabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
-            }
-        }
             //Se añade un listener a la tabla, se utiliza una operación lambda para simplificar
                 productosTabla.getSelectionModel().addListSelectionListener(e -> {
                     // Habilitar solo si hay una fila seleccionada
@@ -106,6 +63,30 @@ public class panelCatalogo extends javax.swing.JPanel {
                         editarProductoBt.setEnabled(false);
                     }
             });
+                
+            busquedaProductoTxt.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) { try {
+                    filtrarTabla();
+                    } catch (IOException ex) {
+                        Logger.getLogger(panelCatalogo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+}
+                @Override
+                public void removeUpdate(DocumentEvent e) { try {
+                    filtrarTabla();
+                    } catch (IOException ex) {
+                        Logger.getLogger(panelCatalogo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+}
+                @Override
+                public void changedUpdate(DocumentEvent e) { try {
+                    filtrarTabla();
+                    } catch (IOException ex) {
+                        Logger.getLogger(panelCatalogo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+}
+            });    
 
     }
     public void cargarCategorias() throws FileNotFoundException, IOException{
@@ -167,6 +148,9 @@ public class panelCatalogo extends javax.swing.JPanel {
     }
     
     public void llenarTabla(boolean soloActivos) throws IOException{
+        modeloProductos.setRowCount(0);
+
+        listaProductos.clear();
         cargarProductos();
     
         for(producto p : listaProductos){
@@ -176,8 +160,8 @@ public class panelCatalogo extends javax.swing.JPanel {
                         p.getCodigo(),
                         p.getNombre(),
                         p.getCategoria().getNombre(),  // nombre visible
-                        p.getCosto(),
-                        p.getPrecio(),
+                        String.format("%.2f",p.getCosto()),
+                        String.format("%.2f",p.getPrecio()),
                         p.getStockActual(),
                         p.getStockMinimo(),
                         p.getTiempoEntrega(),
@@ -189,8 +173,8 @@ public class panelCatalogo extends javax.swing.JPanel {
                         p.getCodigo(),
                         p.getNombre(),
                         p.getCategoria().getNombre(),  // nombre visible
-                        p.getCosto(),
-                        p.getPrecio(),
+                        String.format("%.2f",p.getCosto()),
+                        String.format("%.2f",p.getPrecio()),
                         p.getStockActual(),
                         p.getStockMinimo(),
                         p.getTiempoEntrega(),
@@ -201,33 +185,13 @@ public class panelCatalogo extends javax.swing.JPanel {
         }
     }
     
-    public ArrayList<producto> buscarProductos(String codigo, String nombre, objetoCategoria categoria){
-        boolean hayFiltro = (codigo != null && !codigo.isEmpty()) ||
-                        (nombre != null && !nombre.isEmpty()) ||
-                        (categoria != null);
-
-        if (!hayFiltro) {
-            return null; // no se pasó ningún criterio, no buscar
-        } 
-        
+    public ArrayList<producto> buscarProductos(String codigo, boolean soloActivos){
+      
         ArrayList<producto> resultados = new ArrayList<>();
         
         for (producto p : listaProductos) {
             boolean coincide = true;
 
-            // Si el parámetro no está vacío, se compara
-            if (codigo != null && !codigo.isEmpty()) {
-                coincide = coincide && p.getCodigo().equalsIgnoreCase(codigo);
-            }
-            if (nombre != null && !nombre.isEmpty()) {
-                coincide = coincide && p.getNombre().equalsIgnoreCase(nombre);
-            }
-            if (categoria != null) {
-                coincide = coincide && p.getCategoria().getCodigo().equalsIgnoreCase(categoria.getCodigo());
-            }
-            if (coincide) {
-                resultados.add(p);
-            }
         }
         return resultados; // si no se encuentra
         
@@ -241,6 +205,39 @@ public class panelCatalogo extends javax.swing.JPanel {
         productosTabla.setBackground(colores[0]);
         productosTabla.setForeground(colores[3]);
     }
+    
+    private void filtrarTabla() throws IOException {
+    String texto = busquedaProductoTxt.getText().trim();
+
+    if (texto.isEmpty()) {
+        // mostrar todos
+        llenarTabla(soloActivos);
+    } else {
+        ArrayList<producto> filtrados = new ArrayList<>();
+        for (producto p : listaProductos) {
+            if (p.getCodigo().contains(texto)
+                || p.getNombre().contains(texto)
+                || p.getCategoria().getCodigo().contains(texto)
+                || p.getCategoria().getNombre().contains(texto)){
+                filtrados.add(p);
+            }
+        }
+        for (producto p : filtrados) {
+            modeloProductos.addRow(new Object[]{
+                        p.getCodigo(),
+                        p.getNombre(),
+                        p.getCategoria().getNombre(),  // nombre visible
+                        p.getCosto(),
+                        p.getPrecio(),
+                        p.getStockActual(),
+                        p.getStockMinimo(),
+                        p.getTiempoEntrega(),
+                        p.getEstimacionDemanda()
+                    });
+            }
+        
+    }
+}
      
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -250,12 +247,8 @@ public class panelCatalogo extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         productosTabla = new javax.swing.JTable();
         panelBusquedaProducto = new javax.swing.JPanel();
-        codigoProductoTxt = new javax.swing.JTextField();
+        busquedaProductoTxt = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        nombreProductoTxt = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        buscarProductoBt = new javax.swing.JButton();
         editarProductoBt = new javax.swing.JButton();
         verProductosDesactivadosToggleBt = new javax.swing.JToggleButton();
 
@@ -272,6 +265,7 @@ public class panelCatalogo extends javax.swing.JPanel {
             }
         });
 
+        productosTabla.setAutoCreateRowSorter(true);
         productosTabla.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
         productosTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -288,61 +282,33 @@ public class panelCatalogo extends javax.swing.JPanel {
 
         panelBusquedaProducto.setBackground(new java.awt.Color(145, 199, 87));
 
-        jLabel2.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
-        jLabel2.setText("Codigo de Producto");
-
-        jLabel3.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
-        jLabel3.setText("Nombre de Producto");
-
-        jLabel4.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
-        jLabel4.setText("Categoria de producto");
-
-        buscarProductoBt.setBackground(new java.awt.Color(219, 213, 33));
-        buscarProductoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
-        buscarProductoBt.setText("Buscar");
-        buscarProductoBt.setBorderPainted(false);
-        buscarProductoBt.addActionListener(new java.awt.event.ActionListener() {
+        busquedaProductoTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buscarProductoBtActionPerformed(evt);
+                busquedaProductoTxtActionPerformed(evt);
             }
         });
+
+        jLabel2.setFont(new java.awt.Font("Poppins", 0, 14)); // NOI18N
+        jLabel2.setText("Codigo, Nombre o Categoría de Producto");
 
         javax.swing.GroupLayout panelBusquedaProductoLayout = new javax.swing.GroupLayout(panelBusquedaProducto);
         panelBusquedaProducto.setLayout(panelBusquedaProductoLayout);
         panelBusquedaProductoLayout.setHorizontalGroup(
             panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBusquedaProductoLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(20, 20, 20)
                 .addGroup(panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(codigoProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(15, 15, 15)
-                .addGroup(panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nombreProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(15, 15, 15)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
-                .addComponent(buscarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                    .addComponent(jLabel2)
+                    .addComponent(busquedaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30))
         );
         panelBusquedaProductoLayout.setVerticalGroup(
             panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBusquedaProductoLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(panelBusquedaProductoLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(36, 36, 36))
-                    .addGroup(panelBusquedaProductoLayout.createSequentialGroup()
-                        .addGroup(panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(nombreProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(codigoProductoTxt)))
-                    .addComponent(buscarProductoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(busquedaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
 
@@ -371,16 +337,14 @@ public class panelCatalogo extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 907, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panelBusquedaProducto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(verProductosDesactivadosToggleBt)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(añadirProductoBt, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                            .addComponent(verProductosDesactivadosToggleBt)
+                            .addComponent(panelBusquedaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(añadirProductoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(editarProductoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(23, 23, 23))
         );
@@ -399,7 +363,7 @@ public class panelCatalogo extends javax.swing.JPanel {
                         .addComponent(editarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -416,38 +380,6 @@ public class panelCatalogo extends javax.swing.JPanel {
             Logger.getLogger(panelCatalogo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_añadirProductoBtActionPerformed
-
-    private void buscarProductoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarProductoBtActionPerformed
-        
-            String codigo = codigoProductoTxt.getText().trim();
-            String nombre = nombreProductoTxt.getText();
-            objetoCategoria categoria =  (objetoCategoria) categoriaProductoCombo.getSelectedItem();
-         if(!codigo.isEmpty() || !nombre.isEmpty() || categoria != null){   
-            ArrayList<producto> resultados = buscarProductos(codigo, nombre, categoria);
-
-            if (!resultados.isEmpty()) {
-            modeloProductos.setRowCount(0); // limpiar tabla
-
-            for (producto p : resultados) {
-                modeloProductos.addRow(new Object[]{
-                    p.getCodigo(),
-                    p.getNombre(),
-                    p.getCategoria().getNombre(),
-                    p.getCosto(),
-                    p.getPrecio(),
-                    p.getStockActual(),
-                    p.getStockMinimo(),
-                    p.getTiempoEntrega(),
-                    p.getEstimacionDemanda()
-                });
-            }
-            } else {
-                JOptionPane.showMessageDialog(null, "No se encontraron productos");
-            }
-        }else{
-             JOptionPane.showMessageDialog(null, "Ingrese un dato para la busqueda");
-         }
-    }//GEN-LAST:event_buscarProductoBtActionPerformed
 
     private void editarProductoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarProductoBtActionPerformed
         Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
@@ -483,6 +415,7 @@ public class panelCatalogo extends javax.swing.JPanel {
        listaProductos.clear();
         
        try {
+            modeloProductos.setRowCount(0);
             llenarTabla(soloActivos);
         } catch (IOException ex) {
             Logger.getLogger(panelCatalogo.class.getName()).log(Level.SEVERE, null, ex);
@@ -490,17 +423,17 @@ public class panelCatalogo extends javax.swing.JPanel {
         
     }//GEN-LAST:event_verProductosDesactivadosToggleBtActionPerformed
 
+    private void busquedaProductoTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busquedaProductoTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_busquedaProductoTxtActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton añadirProductoBt;
-    private javax.swing.JButton buscarProductoBt;
-    private javax.swing.JTextField codigoProductoTxt;
+    private javax.swing.JTextField busquedaProductoTxt;
     private javax.swing.JButton editarProductoBt;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField nombreProductoTxt;
     private javax.swing.JPanel panelBusquedaProducto;
     private javax.swing.JTable productosTabla;
     private javax.swing.JToggleButton verProductosDesactivadosToggleBt;
