@@ -423,11 +423,11 @@ public class registroProducto extends javax.swing.JDialog {
                                 p.setStockMinimo(stockMinimo);
                                 p.setTiempoEntrega(tiempoEntrega);
                                 p.setEstimacionDemanda(estimacionDemanda);
-                            }
-                            
-                            actualizarDato(listaProductos);
-                            dispose();
+                            }        
                         }
+                    JOptionPane.showMessageDialog(null, "Producto actualizado exitosamente");
+                    actualizarDato(listaProductos);
+                    dispose();
                 }
             }
         }   
@@ -516,7 +516,6 @@ public class registroProducto extends javax.swing.JDialog {
            for (producto p : lista) {
                printer.printRecord((Object[]) p.toCSV());
            }
-
            limpiarCampos();
 
        } catch (IOException e) {

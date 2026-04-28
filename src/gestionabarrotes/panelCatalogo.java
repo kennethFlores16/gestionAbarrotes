@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -86,7 +87,19 @@ public class panelCatalogo extends javax.swing.JPanel {
                         Logger.getLogger(panelCatalogo.class.getName()).log(Level.SEVERE, null, ex);
                     }
 }
-            });    
+            });
+            // Crear un renderer que alinee a la derecha
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+
+        // Aplicarlo a columnas específicas
+        productosTabla.getColumnModel().getColumn(3).setCellRenderer(rightRenderer); // columna costo
+        productosTabla.getColumnModel().getColumn(4).setCellRenderer(rightRenderer); // columna precio
+        productosTabla.getColumnModel().getColumn(5).setCellRenderer(rightRenderer); // columna stock actual
+        productosTabla.getColumnModel().getColumn(6).setCellRenderer(rightRenderer); // columna stock minimo
+        productosTabla.getColumnModel().getColumn(7).setCellRenderer(rightRenderer); // columna Entrega
+        productosTabla.getColumnModel().getColumn(8).setCellRenderer(rightRenderer); // columna Estimacion
+
 
     }
     public void cargarCategorias() throws FileNotFoundException, IOException{
@@ -104,7 +117,6 @@ public class panelCatalogo extends javax.swing.JPanel {
                 String codigo = record.get("Codigo");
                 String nombre = record.get("Nombre");
                 listaCategoria.add(new objetoCategoria(codigo,nombre));
-                System.out.println(listaCategoria.getLast().toString());
             }
     }
     
@@ -258,6 +270,7 @@ public class panelCatalogo extends javax.swing.JPanel {
         panelBusquedaProducto = new javax.swing.JPanel();
         busquedaProductoTxt = new javax.swing.JTextField();
         tituloBusquedaLb = new javax.swing.JLabel();
+        iconoBusquedaLb = new javax.swing.JLabel();
         editarProductoBt = new javax.swing.JButton();
         verProductosDesactivadosToggleBt = new javax.swing.JToggleButton();
 
@@ -301,6 +314,8 @@ public class panelCatalogo extends javax.swing.JPanel {
         tituloBusquedaLb.setFont(new java.awt.Font("Poppins", 0, 14)); // NOI18N
         tituloBusquedaLb.setText("Codigo, Nombre o Categoría de Producto");
 
+        iconoBusquedaLb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionabarrotes/busqueda.png"))); // NOI18N
+
         javax.swing.GroupLayout panelBusquedaProductoLayout = new javax.swing.GroupLayout(panelBusquedaProducto);
         panelBusquedaProducto.setLayout(panelBusquedaProductoLayout);
         panelBusquedaProductoLayout.setHorizontalGroup(
@@ -309,7 +324,10 @@ public class panelCatalogo extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addGroup(panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tituloBusquedaLb)
-                    .addComponent(busquedaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelBusquedaProductoLayout.createSequentialGroup()
+                        .addComponent(iconoBusquedaLb, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(busquedaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 601, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(30, 30, 30))
         );
         panelBusquedaProductoLayout.setVerticalGroup(
@@ -318,7 +336,9 @@ public class panelCatalogo extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addComponent(tituloBusquedaLb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(busquedaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(busquedaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(iconoBusquedaLb, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20))
         );
 
@@ -447,6 +467,7 @@ public class panelCatalogo extends javax.swing.JPanel {
     private javax.swing.JButton añadirProductoBt;
     private javax.swing.JTextField busquedaProductoTxt;
     private javax.swing.JButton editarProductoBt;
+    private javax.swing.JLabel iconoBusquedaLb;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelBusquedaProducto;
     private javax.swing.JTable productosTabla;

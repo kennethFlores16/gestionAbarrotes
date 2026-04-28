@@ -150,7 +150,11 @@
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="tituloBusquedaLb" min="-2" max="-2" attributes="0"/>
-                      <Component id="busquedaProductoTxt" min="-2" pref="650" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="iconoBusquedaLb" min="-2" pref="22" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="busquedaProductoTxt" min="-2" pref="601" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
@@ -162,7 +166,10 @@
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Component id="tituloBusquedaLb" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="busquedaProductoTxt" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="busquedaProductoTxt" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="iconoBusquedaLb" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -180,6 +187,13 @@
               <Font name="Poppins" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Codigo, Nombre o Categor&#xed;a de Producto"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="iconoBusquedaLb">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/gestionabarrotes/busqueda.png"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>

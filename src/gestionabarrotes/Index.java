@@ -17,8 +17,6 @@ public class Index extends javax.swing.JFrame {
             };
     public Index() throws IOException {
         initComponents();
-        //reinicarColoresBotones();
-        System.out.println(colores[1].toString());
         //Declaración de CardLayout y se añade el Layout al panel que contendrá todos
         cardLayout = new CardLayout();
         contGeneral.setLayout(cardLayout);
@@ -27,10 +25,7 @@ public class Index extends javax.swing.JFrame {
         panelCatalogo = new panelCatalogo(colores);
         
         contGeneral.add(panelDashboard,"Dashboard");
-        contGeneral.add(panelCatalogo,"Catalogo");
-        
-        
-        
+        contGeneral.add(panelCatalogo,"Catalogo");   
     }
 
     @SuppressWarnings("unchecked")
