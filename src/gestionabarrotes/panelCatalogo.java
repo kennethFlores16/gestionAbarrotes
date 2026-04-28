@@ -184,19 +184,7 @@ public class panelCatalogo extends javax.swing.JPanel {
             
         }
     }
-    
-    public ArrayList<producto> buscarProductos(String codigo, boolean soloActivos){
-      
-        ArrayList<producto> resultados = new ArrayList<>();
-        
-        for (producto p : listaProductos) {
-            boolean coincide = true;
-
-        }
-        return resultados; // si no se encuentra
-        
-    }
-    
+  
     public void obtenerColor(Color[] colores){
         this.colores = colores;
     }
@@ -228,7 +216,22 @@ public class panelCatalogo extends javax.swing.JPanel {
             }
         }
         for (producto p : filtrados) {
-            modeloProductos.addRow(new Object[]{
+            if(soloActivos){
+                if(p.isActivo()){
+                    modeloProductos.addRow(new Object[]{
+                        p.getCodigo(),
+                        p.getNombre(),
+                        p.getCategoria().getNombre(),  // nombre visible
+                        String.format("%.2f",p.getCosto()),
+                        String.format("%.2f",p.getPrecio()),
+                        p.getStockActual(),
+                        p.getStockMinimo(),
+                        p.getTiempoEntrega(),
+                        p.getEstimacionDemanda()
+                    });
+                }
+            }else{
+                modeloProductos.addRow(new Object[]{
                         p.getCodigo(),
                         p.getNombre(),
                         p.getCategoria().getNombre(),  // nombre visible
@@ -240,6 +243,7 @@ public class panelCatalogo extends javax.swing.JPanel {
                         p.getEstimacionDemanda()
                     });
             }
+        }
         
     }
 }
@@ -320,7 +324,7 @@ public class panelCatalogo extends javax.swing.JPanel {
 
         editarProductoBt.setBackground(new java.awt.Color(219, 213, 33));
         editarProductoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
-        editarProductoBt.setIcon(new javax.swing.ImageIcon("C:\\Users\\cpu\\Documents\\NetBeansProjects\\gestionAbarrotes\\assets\\imagenes\\editar.png")); // NOI18N
+        editarProductoBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionabarrotes/editar.png"))); // NOI18N
         editarProductoBt.setText("Editar");
         editarProductoBt.setBorderPainted(false);
         editarProductoBt.setEnabled(false);
