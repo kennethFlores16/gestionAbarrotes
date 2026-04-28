@@ -16,7 +16,9 @@ public class registroProducto extends javax.swing.JDialog {
     public DefaultComboBoxModel<objetoCategoria> modeloCategorias = new DefaultComboBoxModel<>();
     private javax.swing.JComboBox<objetoCategoria> categoriaProductoCombo;
     public String funcionBotonRegistrar;
-    public Color[] colores = new Color[4];
+    public Color[] colores;
+    
+    public boolean estado = true;
     
     public registroProducto(java.awt.Frame parent, boolean modal, boolean botonDesactivar,
             String funcionBotonRegistrar
@@ -27,9 +29,11 @@ public class registroProducto extends javax.swing.JDialog {
             ,Color[] colores) throws IOException {
         
         super(parent, modal);
+        
+        this.colores = colores;
         initComponents();
         categoriaProductoCombo = new javax.swing.JComboBox<>();
-        
+           
         this.modeloCategorias = modeloCategorias;
         this.modeloProductos = modeloProductos;
         this.listaProductos = listaProductos;
@@ -37,6 +41,13 @@ public class registroProducto extends javax.swing.JDialog {
         this.funcionBotonRegistrar = funcionBotonRegistrar;
         
         desactivarProductoBt.setVisible(botonDesactivar);
+        if(botonDesactivar){
+            tituloVentanaLb.setText("Editar Producto");
+            registarProductoBt.setText("Guardar Cambios");
+        }else{
+            tituloVentanaLb.setText("Registrar Producto");
+            registarProductoBt.setText("Registrar Producto");
+        }
         codigoProductoTxt.setEditable(!botonDesactivar);
         
         categoriaProductoCombo.setModel(modeloCategorias);
@@ -46,7 +57,10 @@ public class registroProducto extends javax.swing.JDialog {
         jPanel2.add(categoriaProductoCombo);
         
         System.out.println(funcionBotonRegistrar);
+        
+        
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -54,6 +68,7 @@ public class registroProducto extends javax.swing.JDialog {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
         jPanel1 = new javax.swing.JPanel();
+        tituloVentanaLb = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         codigoProductoTxt = new javax.swing.JTextField();
         codigoProductoLb = new javax.swing.JLabel();
@@ -90,15 +105,25 @@ public class registroProducto extends javax.swing.JDialog {
 
         jPanel1.setBackground(new java.awt.Color(145, 199, 87));
 
+        tituloVentanaLb.setFont(new java.awt.Font("Poppins SemiBold", 0, 36)); // NOI18N
+        tituloVentanaLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tituloVentanaLb.setText("Registrar Producto");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(95, 95, 95)
+                .addComponent(tituloVentanaLb, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addComponent(tituloVentanaLb, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -131,6 +156,8 @@ public class registroProducto extends javax.swing.JDialog {
 
         estimacionDemandaProductoTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
+        registarProductoBt.setBackground(new java.awt.Color(219, 213, 33));
+        registarProductoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); // NOI18N
         registarProductoBt.setText("Registrar Producto");
         registarProductoBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,6 +166,7 @@ public class registroProducto extends javax.swing.JDialog {
         });
 
         desactivarProductoBt.setBackground(new java.awt.Color(255, 0, 0));
+        desactivarProductoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); // NOI18N
         desactivarProductoBt.setForeground(new java.awt.Color(255, 255, 255));
         desactivarProductoBt.setText("Desactivar Producto");
         desactivarProductoBt.setBorderPainted(false);
@@ -406,8 +434,10 @@ public class registroProducto extends javax.swing.JDialog {
     }//GEN-LAST:event_registarProductoBtActionPerformed
 
     private void desactivarProductoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desactivarProductoBtActionPerformed
-        int opcion = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea eliminar?",
-            "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        
+        if(estado){
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea desactivar?",
+            "Confirmar desactivación", JOptionPane.YES_NO_OPTION);
             if(opcion == JOptionPane.YES_OPTION){
                 for(producto p : listaProductos){
                     if(p.getCodigo().equals(codigoProductoTxt.getText().trim())){
@@ -418,6 +448,20 @@ public class registroProducto extends javax.swing.JDialog {
                actualizarDato(listaProductos);
                dispose(); 
             }
+        }else{
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea activar?",
+            "Confirmar activación", JOptionPane.YES_NO_OPTION);
+            if(opcion == JOptionPane.YES_OPTION){
+                for(producto p : listaProductos){
+                    if(p.getCodigo().equals(codigoProductoTxt.getText().trim())){
+                        System.out.println(p.getCodigo());
+                        p.setActivo(true);
+                    }
+                }
+               actualizarDato(listaProductos);
+               dispose(); 
+            }
+        }
 
     }//GEN-LAST:event_desactivarProductoBtActionPerformed
     
@@ -504,6 +548,18 @@ public class registroProducto extends javax.swing.JDialog {
         stockMinimoProductoTxt.setText(String.valueOf(p.getStockMinimo()));
         tiempoEntregaProductoTxt.setText(String.valueOf(p.getTiempoEntrega()));
         estimacionDemandaProductoTxt.setText(String.valueOf(p.getEstimacionDemanda()));
+        
+        estado = p.isActivo();
+        
+        if(estado){
+            desactivarProductoBt.setText("Desactivar Producto");
+            desactivarProductoBt.setBackground(Color.RED);
+        }else{
+            desactivarProductoBt.setText("Activar Producto");
+            desactivarProductoBt.setBackground(colores[0]);
+            
+        }
+        
     }
     private boolean validarCampos() {
         // Validar que no estén vacíos
@@ -563,5 +619,6 @@ public class registroProducto extends javax.swing.JDialog {
     private javax.swing.JTextField stockActualProductoTxt;
     private javax.swing.JTextField stockMinimoProductoTxt;
     private javax.swing.JTextField tiempoEntregaProductoTxt;
+    private javax.swing.JLabel tituloVentanaLb;
     // End of variables declaration//GEN-END:variables
 }

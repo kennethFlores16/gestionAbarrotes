@@ -1,6 +1,7 @@
 package gestionabarrotes;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Insets;
 import java.io.IOException;
 
 public class Index extends javax.swing.JFrame {
@@ -9,15 +10,15 @@ public class Index extends javax.swing.JFrame {
     private panelCatalogo panelCatalogo;
     private panelDashboard panelDashboard;
     public Color[] colores = {
-            new Color(145,199,87), //Primario
-            Color.WHITE, //Fondo
-            new Color(219,213,33), //Resalto
-            Color.BLACK //Letras
-    };
+                new Color(145,199,87), //Primario
+                Color.WHITE, //Fondo
+                new Color(219,213,33), //Resalto
+                Color.BLACK //Letras
+            };
     public Index() throws IOException {
         initComponents();
         //reinicarColoresBotones();
-        
+        System.out.println(colores[1].toString());
         //Declaración de CardLayout y se añade el Layout al panel que contendrá todos
         cardLayout = new CardLayout();
         contGeneral.setLayout(cardLayout);
@@ -27,6 +28,8 @@ public class Index extends javax.swing.JFrame {
         
         contGeneral.add(panelDashboard,"Dashboard");
         contGeneral.add(panelCatalogo,"Catalogo");
+        
+        
         
     }
 
@@ -49,7 +52,7 @@ public class Index extends javax.swing.JFrame {
         panelOpciones.setBackground(new java.awt.Color(145, 199, 87));
 
         cambioCatalogoBt.setBackground(new java.awt.Color(145, 199, 87));
-        cambioCatalogoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
+        cambioCatalogoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioCatalogoBt.setText("Catalogo");
         cambioCatalogoBt.setBorder(null);
         cambioCatalogoBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -60,7 +63,7 @@ public class Index extends javax.swing.JFrame {
         });
 
         cambioMovimientoBt.setBackground(new java.awt.Color(145, 199, 87));
-        cambioMovimientoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
+        cambioMovimientoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioMovimientoBt.setText("Movimientos Inventario");
         cambioMovimientoBt.setBorder(null);
         cambioMovimientoBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -71,7 +74,7 @@ public class Index extends javax.swing.JFrame {
         });
 
         cambioDashboardBt.setBackground(new java.awt.Color(145, 199, 87));
-        cambioDashboardBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
+        cambioDashboardBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioDashboardBt.setText("Dashboard");
         cambioDashboardBt.setBorder(null);
         cambioDashboardBt.setBorderPainted(false);
@@ -83,7 +86,7 @@ public class Index extends javax.swing.JFrame {
         });
 
         cambioAnalisisBt.setBackground(new java.awt.Color(145, 199, 87));
-        cambioAnalisisBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
+        cambioAnalisisBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioAnalisisBt.setText("Análisis de Inventario");
         cambioAnalisisBt.setBorder(null);
         cambioAnalisisBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -94,7 +97,7 @@ public class Index extends javax.swing.JFrame {
         });
 
         cambioReporteBt.setBackground(new java.awt.Color(145, 199, 87));
-        cambioReporteBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
+        cambioReporteBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioReporteBt.setText("Reportes");
         cambioReporteBt.setBorder(null);
         cambioReporteBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -104,13 +107,14 @@ public class Index extends javax.swing.JFrame {
             }
         });
 
-        cambioConfiguracionBt.setText("Configuración");
+        cambioConfiguracionBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionabarrotes/ajustes-deslizadores.png"))); // NOI18N
         cambioConfiguracionBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cambioConfiguracionBtActionPerformed(evt);
             }
         });
 
+        modosToggleBt.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         modosToggleBt.setText("Modo Claro");
         modosToggleBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -125,11 +129,11 @@ public class Index extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOpcionesLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addComponent(modosToggleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
-                .addComponent(cambioConfiguracionBt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cambioConfiguracionBt, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(cambioAnalisisBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(cambioMovimientoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(cambioMovimientoBt, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
             .addComponent(cambioCatalogoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(cambioDashboardBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(cambioReporteBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -180,9 +184,7 @@ public class Index extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelOpciones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(contGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(contGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();

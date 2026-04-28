@@ -28,14 +28,14 @@ public class panelCatalogo extends javax.swing.JPanel {
     public ArrayList<producto> listaProductos = new ArrayList<>();
     public ArrayList<objetoCategoria> listaCategoria = new ArrayList<>();
     public DefaultComboBoxModel<objetoCategoria> modeloCategorias = new DefaultComboBoxModel<>();
-    public Color[] colores = new Color[4];
+    public Color[] colores;
     
     public String codigoProducto;
     public boolean soloActivos = true;
     
     public panelCatalogo(Color[] colores) throws IOException {
-        initComponents();
         this.colores = colores;
+        initComponents();
         
         setBackground(colores[1]);
         
@@ -201,8 +201,11 @@ public class panelCatalogo extends javax.swing.JPanel {
         this.colores = colores;
     }
     public void cambioModo(){
+        verProductosDesactivadosToggleBt.setBackground(colores[0]);
+        verProductosDesactivadosToggleBt.setForeground(colores[3]);
         panelBusquedaProducto.setBackground(colores[0]);
-        productosTabla.setBackground(colores[0]);
+        tituloBusquedaLb.setForeground(colores[3]);
+        productosTabla.setBackground(colores[1]);
         productosTabla.setForeground(colores[3]);
     }
     
@@ -250,7 +253,7 @@ public class panelCatalogo extends javax.swing.JPanel {
         productosTabla = new javax.swing.JTable();
         panelBusquedaProducto = new javax.swing.JPanel();
         busquedaProductoTxt = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
+        tituloBusquedaLb = new javax.swing.JLabel();
         editarProductoBt = new javax.swing.JButton();
         verProductosDesactivadosToggleBt = new javax.swing.JToggleButton();
 
@@ -259,6 +262,7 @@ public class panelCatalogo extends javax.swing.JPanel {
 
         añadirProductoBt.setBackground(new java.awt.Color(219, 213, 33));
         añadirProductoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
+        añadirProductoBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionabarrotes/mas.png"))); // NOI18N
         añadirProductoBt.setText("Añadir");
         añadirProductoBt.setBorderPainted(false);
         añadirProductoBt.addActionListener(new java.awt.event.ActionListener() {
@@ -290,8 +294,8 @@ public class panelCatalogo extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Poppins", 0, 14)); // NOI18N
-        jLabel2.setText("Codigo, Nombre o Categoría de Producto");
+        tituloBusquedaLb.setFont(new java.awt.Font("Poppins", 0, 14)); // NOI18N
+        tituloBusquedaLb.setText("Codigo, Nombre o Categoría de Producto");
 
         javax.swing.GroupLayout panelBusquedaProductoLayout = new javax.swing.GroupLayout(panelBusquedaProducto);
         panelBusquedaProducto.setLayout(panelBusquedaProductoLayout);
@@ -300,7 +304,7 @@ public class panelCatalogo extends javax.swing.JPanel {
             .addGroup(panelBusquedaProductoLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
+                    .addComponent(tituloBusquedaLb)
                     .addComponent(busquedaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
@@ -308,7 +312,7 @@ public class panelCatalogo extends javax.swing.JPanel {
             panelBusquedaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBusquedaProductoLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jLabel2)
+                .addComponent(tituloBusquedaLb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(busquedaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
@@ -316,6 +320,7 @@ public class panelCatalogo extends javax.swing.JPanel {
 
         editarProductoBt.setBackground(new java.awt.Color(219, 213, 33));
         editarProductoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
+        editarProductoBt.setIcon(new javax.swing.ImageIcon("C:\\Users\\cpu\\Documents\\NetBeansProjects\\gestionAbarrotes\\assets\\imagenes\\editar.png")); // NOI18N
         editarProductoBt.setText("Editar");
         editarProductoBt.setBorderPainted(false);
         editarProductoBt.setEnabled(false);
@@ -325,7 +330,10 @@ public class panelCatalogo extends javax.swing.JPanel {
             }
         });
 
+        verProductosDesactivadosToggleBt.setBackground(new java.awt.Color(145, 199, 87));
+        verProductosDesactivadosToggleBt.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         verProductosDesactivadosToggleBt.setText("Incluir Productos Desactivados");
+        verProductosDesactivadosToggleBt.setBorderPainted(false);
         verProductosDesactivadosToggleBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 verProductosDesactivadosToggleBtActionPerformed(evt);
@@ -342,8 +350,8 @@ public class panelCatalogo extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 907, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(verProductosDesactivadosToggleBt)
-                            .addComponent(panelBusquedaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(panelBusquedaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(verProductosDesactivadosToggleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(añadirProductoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -354,23 +362,23 @@ public class panelCatalogo extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(verProductosDesactivadosToggleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(panelBusquedaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(verProductosDesactivadosToggleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)
-                        .addComponent(panelBusquedaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(añadirProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(añadirProductoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(15, 15, 15)
                         .addComponent(editarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void añadirProductoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_añadirProductoBtActionPerformed
     Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
+    
     registroProducto registro;
         try {
             registro = new registroProducto(parent, true,false,"a", modeloProductos,
@@ -395,6 +403,7 @@ public class panelCatalogo extends javax.swing.JPanel {
         
         registroProducto registro;
         try {
+            
             registro = new registroProducto(parent, true,true,"e", modeloProductos,
                     listaProductos,listaCategoria,modeloCategorias,colores);
             registro.llenarCamposProducto(editar);
@@ -434,10 +443,10 @@ public class panelCatalogo extends javax.swing.JPanel {
     private javax.swing.JButton añadirProductoBt;
     private javax.swing.JTextField busquedaProductoTxt;
     private javax.swing.JButton editarProductoBt;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelBusquedaProducto;
     private javax.swing.JTable productosTabla;
+    private javax.swing.JLabel tituloBusquedaLb;
     private javax.swing.JToggleButton verProductosDesactivadosToggleBt;
     // End of variables declaration//GEN-END:variables
 }
