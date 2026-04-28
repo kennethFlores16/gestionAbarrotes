@@ -105,12 +105,13 @@ public class panelCatalogo extends javax.swing.JPanel {
                         c.setBackground(Color.WHITE);
                         c.setForeground(Color.BLACK);
                     }
-                }
-
-                if (isSelected) {
+                    
+                    if (isSelected) {
                     c.setBackground(table.getSelectionBackground());
                     c.setForeground(table.getSelectionForeground());
                 }
+                }
+
 
                 if (column >= 3 && column <= 8) {
                 setHorizontalAlignment(SwingConstants.RIGHT);

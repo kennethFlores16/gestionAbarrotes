@@ -1,5 +1,5 @@
 codigo,nombre,categoria,costo,precio,stockActual,stockMinimo,tiempoEntrega,estimacionDemanda,activo
-000078,Wiskas 20KG,ABAR15,520.0,600.0,20,8,4,15,false
+000078,Wiskas 20KG,ABAR15,520.0,600.0,20,8,4,15,true
 078,Aceite,ABAR01,32.0,40.0,30,10,4,7,true
 079,Frijol,ABAR01,10.0,15.0,3,10,1,1,false
 055,Atún,ABAR01,23.0,15.0,30,12,7,15,true
@@ -7,3 +7,4 @@ codigo,nombre,categoria,costo,precio,stockActual,stockMinimo,tiempoEntrega,estim
 07540,Sabritas,ABAR05,15.0,18.0,2,2,1,100,false
 0121,Aceite,ABAR01,32.0,42.0,0,1,1,40,true
 080,Birote,ABAR03,8.0,7.0,25,12,1,30,true
+001,Aceite,ABAR06,4.0,2.0,7,7,7,7,true
