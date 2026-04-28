@@ -1,14 +1,20 @@
 package gestionabarrotes;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.io.IOException;
 
 public class Index extends javax.swing.JFrame {
 
     private CardLayout cardLayout;
     private panelCatalogo panelCatalogo;
     private panelDashboard panelDashboard;
-    
-    public Index() {
+    public Color[] colores = {
+            new Color(145,199,87), //Primario
+            Color.WHITE, //Fondo
+            new Color(219,213,33), //Resalto
+            Color.BLACK //Letras
+    };
+    public Index() throws IOException {
         initComponents();
         //reinicarColoresBotones();
         
@@ -16,8 +22,8 @@ public class Index extends javax.swing.JFrame {
         cardLayout = new CardLayout();
         contGeneral.setLayout(cardLayout);
         
-        panelCatalogo = new panelCatalogo();
         panelDashboard = new panelDashboard();
+        panelCatalogo = new panelCatalogo(colores);
         
         contGeneral.add(panelDashboard,"Dashboard");
         contGeneral.add(panelCatalogo,"Catalogo");
@@ -28,19 +34,22 @@ public class Index extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        panelOpciones = new javax.swing.JPanel();
         cambioCatalogoBt = new javax.swing.JButton();
         cambioMovimientoBt = new javax.swing.JButton();
         cambioDashboardBt = new javax.swing.JButton();
         cambioAnalisisBt = new javax.swing.JButton();
         cambioReporteBt = new javax.swing.JButton();
         cambioConfiguracionBt = new javax.swing.JButton();
+        modosToggleBt = new javax.swing.JToggleButton();
         contGeneral = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(145, 199, 87));
+        panelOpciones.setBackground(new java.awt.Color(145, 199, 87));
 
+        cambioCatalogoBt.setBackground(new java.awt.Color(145, 199, 87));
+        cambioCatalogoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
         cambioCatalogoBt.setText("Catalogo");
         cambioCatalogoBt.setBorder(null);
         cambioCatalogoBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -50,10 +59,19 @@ public class Index extends javax.swing.JFrame {
             }
         });
 
+        cambioMovimientoBt.setBackground(new java.awt.Color(145, 199, 87));
+        cambioMovimientoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
         cambioMovimientoBt.setText("Movimientos Inventario");
         cambioMovimientoBt.setBorder(null);
         cambioMovimientoBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        cambioMovimientoBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cambioMovimientoBtActionPerformed(evt);
+            }
+        });
 
+        cambioDashboardBt.setBackground(new java.awt.Color(145, 199, 87));
+        cambioDashboardBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
         cambioDashboardBt.setText("Dashboard");
         cambioDashboardBt.setBorder(null);
         cambioDashboardBt.setBorderPainted(false);
@@ -64,13 +82,27 @@ public class Index extends javax.swing.JFrame {
             }
         });
 
+        cambioAnalisisBt.setBackground(new java.awt.Color(145, 199, 87));
+        cambioAnalisisBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
         cambioAnalisisBt.setText("Análisis de Inventario");
         cambioAnalisisBt.setBorder(null);
         cambioAnalisisBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        cambioAnalisisBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cambioAnalisisBtActionPerformed(evt);
+            }
+        });
 
+        cambioReporteBt.setBackground(new java.awt.Color(145, 199, 87));
+        cambioReporteBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
         cambioReporteBt.setText("Reportes");
         cambioReporteBt.setBorder(null);
         cambioReporteBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        cambioReporteBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cambioReporteBtActionPerformed(evt);
+            }
+        });
 
         cambioConfiguracionBt.setText("Configuración");
         cambioConfiguracionBt.addActionListener(new java.awt.event.ActionListener() {
@@ -79,26 +111,32 @@ public class Index extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cambioMovimientoBt, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
-                    .addComponent(cambioCatalogoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cambioDashboardBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cambioAnalisisBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cambioReporteBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(cambioConfiguracionBt)))
-                .addGap(0, 0, 0))
+        modosToggleBt.setText("Modo Claro");
+        modosToggleBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modosToggleBtActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelOpcionesLayout = new javax.swing.GroupLayout(panelOpciones);
+        panelOpciones.setLayout(panelOpcionesLayout);
+        panelOpcionesLayout.setHorizontalGroup(
+            panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOpcionesLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(modosToggleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addComponent(cambioConfiguracionBt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(cambioAnalisisBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(cambioMovimientoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(cambioCatalogoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(cambioDashboardBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(cambioReporteBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelOpcionesLayout.setVerticalGroup(
+            panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOpcionesLayout.createSequentialGroup()
                 .addGap(132, 132, 132)
                 .addComponent(cambioDashboardBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -110,17 +148,20 @@ public class Index extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(cambioReporteBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cambioConfiguracionBt)
+                .addGroup(panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cambioConfiguracionBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(modosToggleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
         contGeneral.setBackground(new java.awt.Color(204, 204, 255));
+        contGeneral.setRequestFocusEnabled(false);
 
         javax.swing.GroupLayout contGeneralLayout = new javax.swing.GroupLayout(contGeneral);
         contGeneral.setLayout(contGeneralLayout);
         contGeneralLayout.setHorizontalGroup(
             contGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 859, Short.MAX_VALUE)
+            .addGap(0, 958, Short.MAX_VALUE)
         );
         contGeneralLayout.setVerticalGroup(
             contGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,18 +173,15 @@ public class Index extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelOpciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(contGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addComponent(contGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(panelOpciones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(contGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(contGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -152,27 +190,84 @@ public class Index extends javax.swing.JFrame {
 
     private void cambioCatalogoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioCatalogoBtActionPerformed
         reinicarColoresBotones();
-        cambioCatalogoBt.setBackground(new Color(0,0,0));
+        cambioCatalogoBt.setBackground(colores[1]);
         cardLayout.show(contGeneral, "Catalogo");
     }//GEN-LAST:event_cambioCatalogoBtActionPerformed
 
     private void cambioConfiguracionBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioConfiguracionBtActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_cambioConfiguracionBtActionPerformed
 
     private void cambioDashboardBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioDashboardBtActionPerformed
         reinicarColoresBotones();
-        cambioDashboardBt.setBackground(new Color(0,0,0));
+        cambioDashboardBt.setBackground(colores[1]);
         cardLayout.show(contGeneral,"Dashboard");
         
     }//GEN-LAST:event_cambioDashboardBtActionPerformed
 
+    private void cambioMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioMovimientoBtActionPerformed
+        reinicarColoresBotones();
+        cambioMovimientoBt.setBackground(colores[1]);
+    }//GEN-LAST:event_cambioMovimientoBtActionPerformed
+
+    private void cambioAnalisisBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioAnalisisBtActionPerformed
+        reinicarColoresBotones();
+        cambioAnalisisBt.setBackground(colores[1]);
+    }//GEN-LAST:event_cambioAnalisisBtActionPerformed
+
+    private void cambioReporteBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioReporteBtActionPerformed
+       reinicarColoresBotones();
+       cambioReporteBt.setBackground(colores[1]);
+    }//GEN-LAST:event_cambioReporteBtActionPerformed
+
+    private void modosToggleBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modosToggleBtActionPerformed
+        if (modosToggleBt.isSelected()) {
+            modosToggleBt.setText("Modo Oscuro");
+            Color[] modoOscuro = {
+                new Color(11,20,1), //Primario
+                new Color(24,51,1), //fondos
+                new Color(122, 122, 57),//Resalto
+                Color.WHITE //Letras
+            };
+            colores = modoOscuro;
+            aplicarColores();
+            panelCatalogo.obtenerColor(colores);
+            panelCatalogo.cambioModo();
+        }else {
+            modosToggleBt.setText("Modo Claro");
+            Color[] modoClaro = {
+                new Color(145,199,87), //Primario
+                Color.WHITE, //Fondo
+                new Color(219,213,33), //Resalto
+                Color.BLACK //Letras
+            };
+            colores = modoClaro;
+            aplicarColores();
+            panelCatalogo.obtenerColor(colores);
+            panelCatalogo.cambioModo();
+            
+        }
+            
+    }//GEN-LAST:event_modosToggleBtActionPerformed
+
+    private void aplicarColores() {
+        panelDashboard.setBackground(colores[1]);
+        panelCatalogo.setBackground(colores[1]);
+        panelOpciones.setBackground(colores[0]);
+        reinicarColoresBotones();
+        // aquí agregas todos los componentes que quieras actualizar
+    }
     public void reinicarColoresBotones(){
-        cambioDashboardBt.setBackground(new Color(145,199,87));
-        cambioCatalogoBt.setBackground(new Color(145,199,87));
-        cambioMovimientoBt.setBackground(new Color(145,199,87));
-        cambioAnalisisBt.setBackground(new Color(145,199,87));
-        cambioReporteBt.setBackground(new Color(145,199,87));        
+        cambioDashboardBt.setBackground(colores[0]);
+            cambioDashboardBt.setForeground(colores[3]);
+        cambioCatalogoBt.setBackground(colores[0]);
+            cambioCatalogoBt.setForeground(colores[3]);
+        cambioMovimientoBt.setBackground(colores[0]);
+            cambioMovimientoBt.setForeground(colores[3]);
+        cambioAnalisisBt.setBackground(colores[0]);
+            cambioAnalisisBt.setForeground(colores[3]);
+        cambioReporteBt.setBackground(colores[0]);
+            cambioReporteBt.setForeground(colores[3]);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -183,6 +278,7 @@ public class Index extends javax.swing.JFrame {
     private javax.swing.JButton cambioMovimientoBt;
     private javax.swing.JButton cambioReporteBt;
     private javax.swing.JPanel contGeneral;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JToggleButton modosToggleBt;
+    private javax.swing.JPanel panelOpciones;
     // End of variables declaration//GEN-END:variables
 }

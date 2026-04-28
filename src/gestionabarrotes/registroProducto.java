@@ -1,39 +1,94 @@
 
 package gestionabarrotes;
+import java.awt.Color;
+import org.apache.commons.csv.*;
+import java.io.*;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class registroProducto extends javax.swing.JDialog {
 
-    public registroProducto(java.awt.Frame parent, boolean modal) {
+    public ArrayList<objetoCategoria> listaCategoria = new ArrayList<>();
+    public ArrayList<producto> listaProductos = new ArrayList<>();
+    public DefaultTableModel modeloProductos;
+    public DefaultComboBoxModel<objetoCategoria> modeloCategorias = new DefaultComboBoxModel<>();
+    private javax.swing.JComboBox<objetoCategoria> categoriaProductoCombo;
+    public String funcionBotonRegistrar;
+    public Color[] colores = new Color[4];
+    
+    public registroProducto(java.awt.Frame parent, boolean modal, boolean botonDesactivar,
+            String funcionBotonRegistrar
+            ,DefaultTableModel modeloProductos
+            ,ArrayList<producto> listaProductos
+            ,ArrayList<objetoCategoria> listaCategoria
+            ,DefaultComboBoxModel<objetoCategoria> modeloCategorias
+            ,Color[] colores) throws IOException {
+        
         super(parent, modal);
         initComponents();
+        categoriaProductoCombo = new javax.swing.JComboBox<>();
+        
+        this.modeloCategorias = modeloCategorias;
+        this.modeloProductos = modeloProductos;
+        this.listaProductos = listaProductos;
+        this.listaCategoria = listaCategoria;
+        this.funcionBotonRegistrar = funcionBotonRegistrar;
+        
+        desactivarProductoBt.setVisible(botonDesactivar);
+        codigoProductoTxt.setEditable(!botonDesactivar);
+        
+        categoriaProductoCombo.setModel(modeloCategorias);
+        
+        categoriaProductoCombo.setBounds(20, 126, 200, 40);
+        add(categoriaProductoCombo);
+        jPanel2.add(categoriaProductoCombo);
+        
+        System.out.println(funcionBotonRegistrar);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLayeredPane1 = new javax.swing.JLayeredPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        nombreProductoTxt = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
+        codigoProductoTxt = new javax.swing.JTextField();
+        codigoProductoLb = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         costoProductoTxt = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         precioProductoTxt = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        stockActualTxt = new javax.swing.JTextField();
+        stockActualProductoTxt = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        StockMinimoTxt = new javax.swing.JTextField();
+        stockMinimoProductoTxt = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        tiempoEntregaTxt = new javax.swing.JTextField();
+        tiempoEntregaProductoTxt = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        estimacionDemandaActualTxt = new javax.swing.JTextField();
+        estimacionDemandaProductoTxt = new javax.swing.JTextField();
         registarProductoBt = new javax.swing.JButton();
         desactivarProductoBt = new javax.swing.JButton();
+        nombreProductoTxt = new javax.swing.JTextField();
+        nombreProductoLb = new javax.swing.JLabel();
+
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(145, 199, 87));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -46,25 +101,35 @@ public class registroProducto extends javax.swing.JDialog {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jPanel2.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel1.setText("Nombre del Producto");
+        codigoProductoLb.setText("Codigo del Producto");
 
         jLabel2.setText("Categoría del Producto");
+
+        costoProductoTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel3.setText("Costo");
 
         jLabel4.setText("Precio");
 
+        precioProductoTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         jLabel5.setText("Stock Actual");
+
+        stockActualProductoTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel6.setText("Stock Minimo");
 
+        stockMinimoProductoTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         jLabel7.setText("Tiempo de Entrega (En dias)");
 
+        tiempoEntregaProductoTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         jLabel8.setText("Estimación de Demanda Actual");
+
+        estimacionDemandaProductoTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         registarProductoBt.setText("Registrar Producto");
         registarProductoBt.addActionListener(new java.awt.event.ActionListener() {
@@ -76,60 +141,84 @@ public class registroProducto extends javax.swing.JDialog {
         desactivarProductoBt.setBackground(new java.awt.Color(255, 0, 0));
         desactivarProductoBt.setForeground(new java.awt.Color(255, 255, 255));
         desactivarProductoBt.setText("Desactivar Producto");
+        desactivarProductoBt.setBorderPainted(false);
+        desactivarProductoBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                desactivarProductoBtActionPerformed(evt);
+            }
+        });
+
+        nombreProductoLb.setText("Nombre del Producto");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(desactivarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 363, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(registarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(tiempoEntregaTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(nombreProductoTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(costoProductoTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(stockActualTxt, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(jLabel7))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(precioProductoTxt)
+                            .addComponent(jLabel5)
+                            .addComponent(stockActualProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
-                            .addComponent(StockMinimoTxt)
+                            .addComponent(stockMinimoProductoTxt)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(costoProductoTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(precioProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(tiempoEntregaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
-                            .addComponent(estimacionDemandaActualTxt))))
-                .addContainerGap(24, Short.MAX_VALUE))
+                            .addComponent(estimacionDemandaProductoTxt)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(codigoProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(codigoProductoLb, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nombreProductoTxt)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(nombreProductoLb, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addGap(20, 20, 20))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(30, 30, 30)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(codigoProductoLb)
+                    .addComponent(nombreProductoLb))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(nombreProductoTxt)
+                    .addComponent(codigoProductoTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(nombreProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(costoProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(46, 46, 46))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -139,24 +228,24 @@ public class registroProducto extends javax.swing.JDialog {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(stockActualTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(stockActualProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(StockMinimoTxt)))
+                        .addComponent(stockMinimoProductoTxt)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tiempoEntregaTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(estimacionDemandaActualTxt))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(registarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(desactivarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                    .addComponent(tiempoEntregaProductoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(estimacionDemandaProductoTxt))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(desactivarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(registarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -170,7 +259,7 @@ public class registroProducto extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -178,16 +267,275 @@ public class registroProducto extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registarProductoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registarProductoBtActionPerformed
+
         
+        boolean validacionVacio = validarCampos();
+        
+        if(validacionVacio){
+            boolean validacionNumerico = validarCamposNumericos();
+            if(validacionNumerico){
+                
+                boolean existe = false;
+                
+                String codigo = codigoProductoTxt.getText().trim();
+                String nombre = nombreProductoTxt.getText();
+                objetoCategoria seleccionado = (objetoCategoria) categoriaProductoCombo.getSelectedItem();
+                double costo = Double.parseDouble(costoProductoTxt.getText());
+                double precio = Double.parseDouble(precioProductoTxt.getText());
+                int stockActual = Integer.parseInt(stockActualProductoTxt.getText());
+                int stockMinimo = Integer.parseInt(stockMinimoProductoTxt.getText());
+                int tiempoEntrega = Integer.parseInt(tiempoEntregaProductoTxt.getText());
+                int estimacionDemanda = Integer.parseInt(estimacionDemandaProductoTxt.getText());
+
+                if(funcionBotonRegistrar.equals("a")){
+                    
+                    for(producto p : listaProductos){
+                        if(p.getCodigo().equals(codigo)){
+                            existe = true;
+                            break;
+                        }
+                    }  
+                    if(existe){
+                        JOptionPane.showMessageDialog(null,"El codigo: " + codigo + " ya existe, pruebe otro");
+                    }else{
+                        
+                        if (seleccionado == null) {
+                            JOptionPane.showMessageDialog(this, "Debe seleccionar una categoria");
+                            return;
+                        }
+                        
+                        if (costo <= 0) {
+                            JOptionPane.showMessageDialog(this, "El costo debe ser mayor a 0");
+                            return;
+                        }
+
+                        if (precio <= 0) {
+                            JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0");
+                            return;
+                        }
+
+                        if (costo >= precio) {
+                            JOptionPane.showMessageDialog(this, "El costo no puede ser mayor o igual al precio");
+                            return;
+                        }
+
+                        if (stockMinimo <= 0) {
+                            JOptionPane.showMessageDialog(this, "El stock mínimo debe ser mayor a 0");
+                            return;
+                        }
+
+                        if (tiempoEntrega < 1) {
+                            JOptionPane.showMessageDialog(this, "Los días de entrega deben ser al menos 1");
+                            return;
+                        }
+                        
+                        if (estimacionDemanda <= 0) {
+                            JOptionPane.showMessageDialog(this, "La Estimacion de la demanda debe ser mayor a 0");
+                            return;
+                        }
+                        
+                        listaProductos.add(new producto(codigo,nombre,seleccionado,costo,precio,stockActual,
+                                       stockMinimo,tiempoEntrega,estimacionDemanda,true));
+                        guardarDatos(listaProductos.getLast());
+                        }
+                }else{ 
+                    if (seleccionado == null) {
+                            JOptionPane.showMessageDialog(this, "Debe seleccionar una categoria");
+                            return;
+                        }
+                        
+                        if (costo <= 0) {
+                            JOptionPane.showMessageDialog(this, "El costo debe ser mayor a 0");
+                            return;
+                        }
+
+                        if (precio <= 0) {
+                            JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0");
+                            return;
+                        }
+
+                        if (costo >= precio) {
+                            JOptionPane.showMessageDialog(this, "El costo no puede ser mayor o igual al precio");
+                            return;
+                        }
+
+                        if (stockMinimo <= 0) {
+                            JOptionPane.showMessageDialog(this, "El stock mínimo debe ser mayor a 0");
+                            return;
+                        }
+
+                        if (tiempoEntrega < 1) {
+                            JOptionPane.showMessageDialog(this, "Los días de entrega deben ser al menos 1");
+                            return;
+                        }
+                        
+                        if (estimacionDemanda <= 0) {
+                            JOptionPane.showMessageDialog(this, "La Estimacion de la demanda debe ser mayor a 0");
+                            return;
+                        }
+                        
+                    for(producto p : listaProductos){
+                            if(p.getCodigo().equals(codigo)){
+                                p.setCodigo(codigo);
+                                p.setNombre(nombre);
+                                p.setCategoria(seleccionado);
+                                p.setCosto(costo);
+                                p.setPrecio(precio);
+                                p.setStockActual(stockActual);
+                                p.setStockMinimo(stockMinimo);
+                                p.setTiempoEntrega(tiempoEntrega);
+                                p.setEstimacionDemanda(estimacionDemanda);
+                            }
+                            
+                            actualizarDato(listaProductos);
+                            dispose();
+                        }
+                }
+            }
+        }   
     }//GEN-LAST:event_registarProductoBtActionPerformed
 
+    private void desactivarProductoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desactivarProductoBtActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea eliminar?",
+            "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+            if(opcion == JOptionPane.YES_OPTION){
+                for(producto p : listaProductos){
+                    if(p.getCodigo().equals(codigoProductoTxt.getText().trim())){
+                        System.out.println(p.getCodigo());
+                        p.setActivo(false);
+                    }
+                }
+               actualizarDato(listaProductos);
+               dispose(); 
+            }
+
+    }//GEN-LAST:event_desactivarProductoBtActionPerformed
+    
+    public void guardarDatos(producto p){
+        File archivo = new File("assets/productos.csv");
+
+        boolean append = archivo.exists(); // si ya existe, agregamos
+
+            try (Writer writer = new FileWriter(archivo, true);
+                 CSVPrinter printer = append
+                     ? new CSVPrinter(writer, CSVFormat.DEFAULT) // sin encabezado
+                     : new CSVPrinter(writer, CSVFormat.DEFAULT.builder()
+                             .setHeader("codigo","nombre","categoria","costo","precio",
+                                        "stockActual","stockMinimo","tiempoEntrega","estimacionDemanda","activo")
+                             .build())) {
+
+                // Escribir registros usando tu método toCSV()
+                printer.printRecord((Object[]) p.toCSV());
+
+                // Agregar también a la tabla
+                modeloProductos.addRow(new Object[]{
+                    p.getCodigo(),
+                    p.getNombre(),
+                    p.getCategoria().getNombre(),  // nombre visible
+                    p.getCosto(),
+                    p.getPrecio(),
+                    p.getStockActual(),
+                    p.getStockMinimo(),
+                    p.getTiempoEntrega(),
+                    p.getEstimacionDemanda()
+                });
+                JOptionPane.showMessageDialog(null, "Producto regisrado exitosamente");
+                limpiarCampos();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+    
+    public void actualizarDato(ArrayList<producto> lista){
+        
+        File archivo = new File("assets/productos.csv");
+        
+        try (Writer writer = new FileWriter(archivo);
+            CSVPrinter printer = new CSVPrinter(writer,
+                CSVFormat.DEFAULT.builder()
+                    .setHeader("codigo","nombre","categoria","costo","precio",
+                               "stockActual","stockMinimo","tiempoEntrega","estimacionDemanda","activo")
+                    .build())) {
+
+           // Escribir todos los productos
+           for (producto p : lista) {
+               printer.printRecord((Object[]) p.toCSV());
+           }
+
+           limpiarCampos();
+
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+
+    }
+
+    
+    public void limpiarCampos(){
+        codigoProductoTxt.setText("");
+        nombreProductoTxt.setText("");
+        categoriaProductoCombo.setSelectedIndex(0);
+        costoProductoTxt.setText("");
+        precioProductoTxt.setText("");
+        stockActualProductoTxt.setText("");
+        stockMinimoProductoTxt.setText("");
+        tiempoEntregaProductoTxt.setText("");
+        estimacionDemandaProductoTxt.setText("");
+    }
+    
+    public void llenarCamposProducto(producto p){
+        codigoProductoTxt.setText(p.getCodigo());
+        nombreProductoTxt.setText(p.getNombre());
+        categoriaProductoCombo.setSelectedItem(p.getCategoria());
+        costoProductoTxt.setText(String.valueOf(p.getCosto()));
+        precioProductoTxt.setText(String.valueOf(p.getPrecio()));
+        stockActualProductoTxt.setText(String.valueOf(p.getStockActual()));
+        stockMinimoProductoTxt.setText(String.valueOf(p.getStockMinimo()));
+        tiempoEntregaProductoTxt.setText(String.valueOf(p.getTiempoEntrega()));
+        estimacionDemandaProductoTxt.setText(String.valueOf(p.getEstimacionDemanda()));
+    }
+    private boolean validarCampos() {
+        // Validar que no estén vacíos
+        if (codigoProductoTxt.getText().isEmpty() ||
+            nombreProductoTxt.getText().isEmpty() ||
+            categoriaProductoCombo == null ||
+            costoProductoTxt.getText().isEmpty() ||
+            precioProductoTxt.getText().isEmpty() ||
+            stockActualProductoTxt.getText().isEmpty() ||
+            stockMinimoProductoTxt.getText().isEmpty() ||
+            tiempoEntregaProductoTxt.getText().isEmpty() ||
+            estimacionDemandaProductoTxt.getText().isEmpty()) {
+
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
+            return false;
+        }
+        return true; // todo válido
+    }
+    
+    private boolean validarCamposNumericos(){
+        // Validar numéricos
+        if (!costoProductoTxt.getText().matches("\\d+(\\.\\d+)?") ||
+            !precioProductoTxt.getText().matches("\\d+(\\.\\d+)?") ||
+            !stockActualProductoTxt.getText().matches("\\d+(\\.\\d+)?") ||
+            !stockMinimoProductoTxt.getText().matches("\\d+(\\.\\d+)?") ||
+            !tiempoEntregaProductoTxt.getText().matches("\\d+(\\.\\d+)?")||
+            !estimacionDemandaProductoTxt.getText().matches("\\d+(\\.\\d+)?")) {
+
+            JOptionPane.showMessageDialog(this, "Los campos numéricos deben contener solo números");
+            return false;
+        }
+        return true;
+    }
+
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField StockMinimoTxt;
+    private javax.swing.JLabel codigoProductoLb;
+    private javax.swing.JTextField codigoProductoTxt;
     private javax.swing.JTextField costoProductoTxt;
     private javax.swing.JButton desactivarProductoBt;
-    private javax.swing.JTextField estimacionDemandaActualTxt;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField estimacionDemandaProductoTxt;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -195,12 +543,15 @@ public class registroProducto extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel nombreProductoLb;
     private javax.swing.JTextField nombreProductoTxt;
     private javax.swing.JTextField precioProductoTxt;
     private javax.swing.JButton registarProductoBt;
-    private javax.swing.JTextField stockActualTxt;
-    private javax.swing.JTextField tiempoEntregaTxt;
+    private javax.swing.JTextField stockActualProductoTxt;
+    private javax.swing.JTextField stockMinimoProductoTxt;
+    private javax.swing.JTextField tiempoEntregaProductoTxt;
     // End of variables declaration//GEN-END:variables
 }

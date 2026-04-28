@@ -1,14 +1,7 @@
 package gestionabarrotes;
 
-/**
- *
- * @author JUAN JOSE
- */
 public class panelDashboard extends javax.swing.JPanel {
 
-    /**
-     * Creates new form panelDashboard
-     */
     public panelDashboard() {
         initComponents();
     }
@@ -23,6 +16,8 @@ public class panelDashboard extends javax.swing.JPanel {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
+
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jButton1.setText("jButton1");
 
