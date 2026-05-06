@@ -9,6 +9,7 @@ public class Index extends javax.swing.JFrame {
     private CardLayout cardLayout;
     private panelCatalogo panelCatalogo;
     private panelDashboard panelDashboard;
+    private panelMovimientos panelMovimientos;
     public Color[] colores = {
                 new Color(145,199,87), //Primario
                 Color.WHITE, //Fondo
@@ -23,9 +24,11 @@ public class Index extends javax.swing.JFrame {
         
         panelDashboard = new panelDashboard();
         panelCatalogo = new panelCatalogo(colores);
+        panelMovimientos = new panelMovimientos();
         
         contGeneral.add(panelDashboard,"Dashboard");
-        contGeneral.add(panelCatalogo,"Catalogo");   
+        contGeneral.add(panelCatalogo,"Catalogo");
+        contGeneral.add(panelMovimientos,"Movimientos");
     }
 
     @SuppressWarnings("unchecked")
@@ -49,7 +52,7 @@ public class Index extends javax.swing.JFrame {
         cambioCatalogoBt.setBackground(new java.awt.Color(145, 199, 87));
         cambioCatalogoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioCatalogoBt.setText("Catalogo");
-        cambioCatalogoBt.setBorder(null);
+        cambioCatalogoBt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
         cambioCatalogoBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         cambioCatalogoBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -60,7 +63,7 @@ public class Index extends javax.swing.JFrame {
         cambioMovimientoBt.setBackground(new java.awt.Color(145, 199, 87));
         cambioMovimientoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioMovimientoBt.setText("Movimientos Inventario");
-        cambioMovimientoBt.setBorder(null);
+        cambioMovimientoBt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
         cambioMovimientoBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         cambioMovimientoBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -71,7 +74,7 @@ public class Index extends javax.swing.JFrame {
         cambioDashboardBt.setBackground(new java.awt.Color(145, 199, 87));
         cambioDashboardBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioDashboardBt.setText("Dashboard");
-        cambioDashboardBt.setBorder(null);
+        cambioDashboardBt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
         cambioDashboardBt.setBorderPainted(false);
         cambioDashboardBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         cambioDashboardBt.addActionListener(new java.awt.event.ActionListener() {
@@ -83,7 +86,7 @@ public class Index extends javax.swing.JFrame {
         cambioAnalisisBt.setBackground(new java.awt.Color(145, 199, 87));
         cambioAnalisisBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioAnalisisBt.setText("Análisis de Inventario");
-        cambioAnalisisBt.setBorder(null);
+        cambioAnalisisBt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
         cambioAnalisisBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         cambioAnalisisBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -94,7 +97,7 @@ public class Index extends javax.swing.JFrame {
         cambioReporteBt.setBackground(new java.awt.Color(145, 199, 87));
         cambioReporteBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 16)); // NOI18N
         cambioReporteBt.setText("Reportes");
-        cambioReporteBt.setBorder(null);
+        cambioReporteBt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
         cambioReporteBt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         cambioReporteBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -160,11 +163,11 @@ public class Index extends javax.swing.JFrame {
         contGeneral.setLayout(contGeneralLayout);
         contGeneralLayout.setHorizontalGroup(
             contGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 958, Short.MAX_VALUE)
+            .addGap(0, 1051, Short.MAX_VALUE)
         );
         contGeneralLayout.setVerticalGroup(
             contGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 627, Short.MAX_VALUE)
+            .addGap(0, 750, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -205,6 +208,7 @@ public class Index extends javax.swing.JFrame {
     private void cambioMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioMovimientoBtActionPerformed
         reinicarColoresBotones();
         cambioMovimientoBt.setBackground(colores[1]);
+        cardLayout.show(contGeneral, "Movimientos");
     }//GEN-LAST:event_cambioMovimientoBtActionPerformed
 
     private void cambioAnalisisBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioAnalisisBtActionPerformed

@@ -343,8 +343,7 @@ public class registroProducto extends javax.swing.JDialog {
                         }
 
                         if (costo >= precio) {
-                            JOptionPane.showMessageDialog(null,"El costo es mayor que el precio de venta");
-                            int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea registrar este precio?",
+                            int opcion = JOptionPane.showConfirmDialog(null, "El costo es mayor que el precio de venta ¿Esta seguro que desea registrar este precio?",
                             "Confirmar registro", JOptionPane.YES_NO_OPTION);
                             if(opcion == JOptionPane.NO_OPTION){
                                 return;
@@ -388,8 +387,7 @@ public class registroProducto extends javax.swing.JDialog {
                         }
 
                         if (costo >= precio) {
-                            JOptionPane.showMessageDialog(null,"El costo es mayor que el precio de venta");
-                            int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea registrar este precio?",
+                            int opcion = JOptionPane.showConfirmDialog(null, "El costo es mayor que el precio de venta ¿Esta seguro que desea registrar este precio?",
                             "Confirmar registro", JOptionPane.YES_NO_OPTION);
                             if(opcion == JOptionPane.NO_OPTION){
                                 return;
