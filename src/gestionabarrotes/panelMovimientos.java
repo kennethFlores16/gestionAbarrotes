@@ -3,12 +3,15 @@ package gestionabarrotes;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
@@ -74,6 +77,30 @@ public class panelMovimientos extends javax.swing.JPanel {
         for (int i = 0; i < tablaStockActual.getColumnCount(); i++) {
             tablaStockActual.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
+        
+        codigoProductoMovimientoTxt.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String codigo = codigoProductoMovimientoTxt.getText();
+                    
+                    boolean encontrado = false;
+
+                        for(producto p : listaProductos){
+                            if(p.getCodigo().equalsIgnoreCase(codigo)){
+                                nombreProductoMovimientoTxt.setText(p.getNombre());
+                                encontrado = true;
+                                break;
+                            }
+                        }
+
+                        if(!encontrado){
+                            JOptionPane.showMessageDialog(null,"Este producto no existe");
+                        }
+
+                }
+            }
+        });
         
     }
 
@@ -203,8 +230,10 @@ public class panelMovimientos extends javax.swing.JPanel {
         jLabel10.setFont(new java.awt.Font("Poppins SemiBold", 0, 18)); // NOI18N
         jLabel10.setText("Movimientos por Agregar");
 
+        finalizarMovimientoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); // NOI18N
         finalizarMovimientoBt.setText("Finalizar");
 
+        cancelarMovimientoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); // NOI18N
         cancelarMovimientoBt.setText("Cancelar");
 
         javax.swing.GroupLayout panelRegistroMovimientoLayout = new javax.swing.GroupLayout(panelRegistroMovimiento);
@@ -230,7 +259,7 @@ public class panelMovimientos extends javax.swing.JPanel {
                                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRegistroMovimientoLayout.createSequentialGroup()
                                         .addComponent(cancelarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(finalizarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
@@ -323,6 +352,7 @@ public class panelMovimientos extends javax.swing.JPanel {
         jLabel5.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
         jLabel5.setText("Historial de Movimientos");
 
+        jButton1.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); // NOI18N
         jButton1.setText("Consultar Movimiento");
 
         javax.swing.GroupLayout panelTablaLayout = new javax.swing.GroupLayout(panelTabla);
