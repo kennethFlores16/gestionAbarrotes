@@ -36,5 +36,11 @@ public class movimientoDetalle {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-    
+    public String[] toCSV(){
+       return new String[]{
+           String.valueOf(encabezado.getIdentificador()),
+           codigoProducto,
+           String.valueOf(cantidad)
+       };
+   }
 }
