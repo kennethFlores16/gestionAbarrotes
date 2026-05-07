@@ -3,6 +3,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Insets;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Index extends javax.swing.JFrame {
 
@@ -24,7 +26,7 @@ public class Index extends javax.swing.JFrame {
         
         panelDashboard = new panelDashboard();
         panelCatalogo = new panelCatalogo(colores);
-        panelMovimientos = new panelMovimientos();
+        panelMovimientos = new panelMovimientos(colores);
         
         contGeneral.add(panelDashboard,"Dashboard");
         contGeneral.add(panelCatalogo,"Catalogo");
@@ -208,6 +210,11 @@ public class Index extends javax.swing.JFrame {
     private void cambioMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioMovimientoBtActionPerformed
         reinicarColoresBotones();
         cambioMovimientoBt.setBackground(colores[1]);
+        try {
+            panelMovimientos.inicializar();
+        } catch (IOException ex) {
+            Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+        }
         cardLayout.show(contGeneral, "Movimientos");
     }//GEN-LAST:event_cambioMovimientoBtActionPerformed
 

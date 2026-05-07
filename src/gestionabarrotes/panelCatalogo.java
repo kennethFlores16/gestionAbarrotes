@@ -88,7 +88,6 @@ public class panelCatalogo extends javax.swing.JPanel {
                     }
 }
             });
-            // Crear un renderer que alinee a la derecha
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(){
             @Override
             public Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
@@ -127,6 +126,7 @@ public class panelCatalogo extends javax.swing.JPanel {
             productosTabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
     }
+    
     public void cargarCategorias() throws FileNotFoundException, IOException{
             File archivo = new File("assets/abarrotes.csv");
 
@@ -469,7 +469,7 @@ public class panelCatalogo extends javax.swing.JPanel {
     }//GEN-LAST:event_editarProductoBtActionPerformed
 
     private void verProductosDesactivadosToggleBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verProductosDesactivadosToggleBtActionPerformed
-        soloActivos = !verProductosDesactivadosToggleBt.isSelected();
+       soloActivos = !verProductosDesactivadosToggleBt.isSelected();
         
        modeloProductos.setRowCount(0);
        listaProductos.clear();

@@ -1,6 +1,8 @@
 
 package gestionabarrotes;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,6 +11,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -18,8 +22,9 @@ public class panelMovimientos extends javax.swing.JPanel {
     public ArrayList<producto> listaProductos = new ArrayList<>();
     public ArrayList<objetoCategoria> listaCategoria = new ArrayList<>();
     DefaultTableModel modeloStockActual;
+    public Color[] colores;
     
-    public panelMovimientos() throws IOException {
+    public panelMovimientos(Color[] colores) throws IOException {
         initComponents();
         SpinnerDateModel modeloFecha = new SpinnerDateModel();
         spinnerFecha.setModel(modeloFecha);
@@ -31,9 +36,45 @@ public class panelMovimientos extends javax.swing.JPanel {
        
         tablaStockActual.setModel(modeloStockActual);
         
-        cargarCategorias();
-        cargarProductos();
-        llenarTablaStock();
+        inicializar();
+        
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(){
+            @Override
+            public Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                
+                Object estado = tablaStockActual.getValueAt(row, 4);
+
+                if("Bajo".equals(estado)){
+                    c.setBackground(new Color(219,213,33));
+                    c.setForeground(Color.black);                    
+                }else if("Agotado".equals(estado)){
+                    c.setBackground(Color.red);
+                    c.setForeground(Color.black);  
+                }else if("Sobreinventario".equals(estado)){
+                    c.setBackground(Color.DARK_GRAY);
+                    c.setForeground(Color.white);
+                }else{
+                    c.setBackground(Color.white);
+                    c.setForeground(Color.black);  
+                }
+
+                if (column >= 2 && column <= 3) {
+                setHorizontalAlignment(SwingConstants.RIGHT);
+                }else{
+                    setHorizontalAlignment(SwingConstants.LEFT);
+                }    
+                
+                return c;
+            }
+        };
+
+        for (int i = 0; i < tablaStockActual.getColumnCount(); i++) {
+            tablaStockActual.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -279,7 +320,7 @@ public class panelMovimientos extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tablaHistorialMovimientos);
 
-        jLabel5.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
         jLabel5.setText("Historial de Movimientos");
 
         jButton1.setText("Consultar Movimiento");
@@ -290,13 +331,13 @@ public class panelMovimientos extends javax.swing.JPanel {
             panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTablaLayout.createSequentialGroup()
                 .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelTablaLayout.createSequentialGroup()
+                            .addGap(15, 15, 15)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelTablaLayout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(panelTablaLayout.createSequentialGroup()
-                        .addGap(137, 137, 137)
+                        .addGap(136, 136, 136)
                         .addComponent(jLabel5)))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
@@ -305,11 +346,11 @@ public class panelMovimientos extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTablaLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addGap(12, 12, 12))
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
@@ -328,7 +369,7 @@ public class panelMovimientos extends javax.swing.JPanel {
         ));
         jScrollPane4.setViewportView(tablaStockActual);
 
-        jLabel11.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
         jLabel11.setText("Stock Actual");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -342,14 +383,14 @@ public class panelMovimientos extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel11)
-                .addGap(237, 237, 237))
+                .addGap(236, 236, 236))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
+                .addContainerGap(12, Short.MAX_VALUE)
                 .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
@@ -397,6 +438,12 @@ public class panelMovimientos extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    public void inicializar() throws IOException{
+        cargarCategorias();
+        cargarProductos();
+        llenarTablaStock();
+    }
+    
     public void cargarCategorias() throws FileNotFoundException, IOException{
             File archivo = new File("assets/abarrotes.csv");
 
