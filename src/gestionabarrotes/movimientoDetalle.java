@@ -44,4 +44,9 @@ public class movimientoDetalle {
            String.valueOf(cantidad)
        };
    }
+
+    @Override
+    public String toString() {
+        return "movimientoDetalle{" + "encabezado=" + encabezado + ", codigoProducto=" + codigoProducto + ", cantidad=" + cantidad + '}';
+    }
 }

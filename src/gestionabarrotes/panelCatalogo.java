@@ -54,15 +54,15 @@ public class panelCatalogo extends javax.swing.JPanel {
         
         llenarTabla(soloActivos);
             //Se añade un listener a la tabla, se utiliza una operación lambda para simplificar
-                productosTabla.getSelectionModel().addListSelectionListener(e -> {
-                    // Habilitar solo si hay una fila seleccionada
-                    int fila = productosTabla.getSelectedRow();
-                    if (fila != -1) {
-                        editarProductoBt.setEnabled(true);
-                        codigoProducto = productosTabla.getValueAt(fila,0).toString();
-                    }else {
-                        editarProductoBt.setEnabled(false);
-                    }
+            productosTabla.getSelectionModel().addListSelectionListener(e -> {
+                // Habilitar solo si hay una fila seleccionada
+                int fila = productosTabla.getSelectedRow();
+                if (fila != -1) {
+                    editarProductoBt.setEnabled(true);
+                    codigoProducto = productosTabla.getValueAt(fila,0).toString();
+                }else {
+                    editarProductoBt.setEnabled(false);
+                }
             });
                 
             busquedaProductoTxt.getDocument().addDocumentListener(new DocumentListener() {
@@ -125,6 +125,11 @@ public class panelCatalogo extends javax.swing.JPanel {
         for (int i = 0; i < productosTabla.getColumnCount(); i++) {
             productosTabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
+    }
+    public void inicializar() throws IOException{
+        listaProductos.clear();
+        cargarProductos();
+        llenarTabla(soloActivos);
     }
     
     public void cargarCategorias() throws FileNotFoundException, IOException{

@@ -194,6 +194,11 @@ public class Index extends javax.swing.JFrame {
         reinicarColoresBotones();
         cambioCatalogoBt.setBackground(colores[1]);
         cardLayout.show(contGeneral, "Catalogo");
+        try {
+            panelCatalogo.inicializar();
+        } catch (IOException ex) {
+            Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_cambioCatalogoBtActionPerformed
 
     private void cambioConfiguracionBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioConfiguracionBtActionPerformed
