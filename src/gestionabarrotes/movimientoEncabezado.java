@@ -53,5 +53,11 @@ public class movimientoEncabezado {
     public void setMotivo(String motivo) {
         this.motivo = motivo;
     }
+
+    @Override
+    public String toString() {
+        return "movimientoEncabezado{" + "identificador=" + identificador + ", tipoMovimiento=" + tipoMovimiento + ", fecha=" + fecha + ", motivo=" + motivo + '}';
+    }
+    
    
 }

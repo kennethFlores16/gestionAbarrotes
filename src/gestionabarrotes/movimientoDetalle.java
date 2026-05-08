@@ -6,8 +6,9 @@ public class movimientoDetalle {
     private String codigoProducto;
     private int cantidad;
     
-    public movimientoDetalle(movimientoEncabezado encabezado,
-            String codigoProducto, int cantidad){
+    public movimientoDetalle(movimientoEncabezado encabezado
+                            ,String codigoProducto
+                            ,int cantidad){
         this.encabezado = encabezado;
         this.codigoProducto = codigoProducto;
         this.cantidad = cantidad;

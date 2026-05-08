@@ -28,11 +28,13 @@ public class panelMovimientos extends javax.swing.JPanel {
 
     public ArrayList<producto> listaProductos = new ArrayList<>();
     public ArrayList<objetoCategoria> listaCategoria = new ArrayList<>();
-    public ArrayList<movimientoEncabezado> listaMovimientoEncabezado = new ArrayList<>();
-    public ArrayList<movimientoDetalle> listaMovimientoDetalleTemporal = new ArrayList<>();
+    private ArrayList<movimientoEncabezado> listaMovimientoEncabezado = new ArrayList<>();
+    private ArrayList<movimientoDetalle> listaMovimientoDetalle = new ArrayList<>();
+    private ArrayList<movimientoDetalle> listaMovimientoDetalleTemporal  = new ArrayList<>();
     DefaultTableModel modeloMovimientosAgregar,modeloMovimientosHistorial,modeloStockActual;
     public Color[] colores;
-    public int contador;
+    private int contador;
+    private movimientoEncabezado encabezado;
     
     public panelMovimientos(Color[] colores) throws IOException {
         initComponents();
@@ -54,6 +56,11 @@ public class panelMovimientos extends javax.swing.JPanel {
         tablaStockActual.setModel(modeloStockActual);
         
         inicializar();
+        cargarMovimientoEncabezado();
+        cargarMovimientoDetalle();
+        
+        contador = listaMovimientoEncabezado.size();
+        contadorMovimientosLb.setText(String.valueOf(contador));
         
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(){
             @Override
@@ -124,14 +131,13 @@ public class panelMovimientos extends javax.swing.JPanel {
             @Override
             public void keyPressed(KeyEvent e){
                 if (e.getKeyCode() == KeyEvent.VK_ENTER){
-                    listaMovimientoEncabezado.add(new movimientoEncabezado(
+                    encabezado = new movimientoEncabezado(
                             contador,
                             tipoMovimientoCombo.getSelectedItem().toString(),
                             spinnerFecha.getValue().toString(),
                             motivoMovimientoTxt.getText()
-                    ));
+                    );
                     codigoProductoMovimientoTxt.requestFocus();
-                    contador = contador + 1;
                 }
             }
         });
@@ -537,9 +543,9 @@ public class panelMovimientos extends javax.swing.JPanel {
 
     private void añadirMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_añadirMovimientoBtActionPerformed
         
-        if(!listaMovimientoEncabezado.isEmpty() && !motivoMovimientoTxt.getText().isEmpty()){
+        if(encabezado !=null && !motivoMovimientoTxt.getText().isEmpty()){
             listaMovimientoDetalleTemporal.add(new movimientoDetalle(
-                                   listaMovimientoEncabezado.getLast(),
+                                   encabezado,
                                    codigoProductoMovimientoTxt.getText(),
                                    Integer.parseInt(cantidadProductoMovimientoTxt.getText())
             ));
@@ -557,12 +563,13 @@ public class panelMovimientos extends javax.swing.JPanel {
 
     private void cancelarMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarMovimientoBtActionPerformed
         
-        if(!listaMovimientoEncabezado.isEmpty() && !motivoMovimientoTxt.getText().isEmpty()){
+        if(encabezado != null && !motivoMovimientoTxt.getText().isEmpty()){
             int opcion = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea cancelar el movimiento?",
             "Confirmar activación", JOptionPane.YES_NO_OPTION);
         if(opcion == JOptionPane.YES_OPTION){
-            if(!listaMovimientoEncabezado.isEmpty()){
-                listaMovimientoEncabezado.remove(listaMovimientoEncabezado.size()-1);
+            if(encabezado != null){
+                encabezado = null;
+                contador = contador - 1;
             }else{
                 JOptionPane.showMessageDialog(null, "No existe un encabezado que eliminar");
             }
@@ -577,7 +584,10 @@ public class panelMovimientos extends javax.swing.JPanel {
     }//GEN-LAST:event_cancelarMovimientoBtActionPerformed
 
     private void finalizarMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarMovimientoBtActionPerformed
-        
+        guardarMovimientoEncabezado(encabezado);
+        guardarMovimientoDetalle(listaMovimientoDetalleTemporal);
+        listaMovimientoDetalleTemporal.clear();
+        limpiarCampos();
     }//GEN-LAST:event_finalizarMovimientoBtActionPerformed
 
     public void inicializar() throws IOException{
@@ -596,19 +606,21 @@ public class panelMovimientos extends javax.swing.JPanel {
         modeloMovimientosAgregar.setRowCount(0);
     }
     public void guardarMovimientoEncabezado(movimientoEncabezado movEn){
+        System.out.println(contador);
         File archivo = new File("assets/movimientoEncabezado.csv");
 
-        boolean append = archivo.exists(); // si ya existe, agregamos
+        boolean append = archivo.exists() && archivo.length() > 0;  // si ya existe, agregamos
 
             try (Writer writer = new FileWriter(archivo, true);
                  CSVPrinter printer = append
                      ? new CSVPrinter(writer, CSVFormat.DEFAULT) // sin encabezado
                      : new CSVPrinter(writer, CSVFormat.DEFAULT.builder()
-                             .setHeader("identificador","tipoMovimiento","fecha","Motivo")
+                             .setHeader("identificador","tipoMovimiento","fecha","motivo")
                              .build())) {
 
                 // Escribir registros usando tu método toCSV()
                 printer.printRecord((Object[]) movEn.toCSV());
+                listaMovimientoEncabezado.add(movEn);
 
                 // Agregar también a la tabla
                 modeloMovimientosHistorial.addRow(new Object[]{
@@ -617,16 +629,17 @@ public class panelMovimientos extends javax.swing.JPanel {
                     movEn.getFecha(),
                     movEn.getMotivo()
                 });
+                contador = listaMovimientoEncabezado.size();
+                contadorMovimientosLb.setText(String.valueOf(contador));
+                System.out.println(contador);
             } catch (IOException e) {
                 e.printStackTrace();
             }
     }
-    
-    /*
-    public void guardarMovimientoEncabezado(ArrayList<movimientoDetalle> movDe){
+    public void guardarMovimientoDetalle(ArrayList<movimientoDetalle> lista){
         File archivo = new File("assets/movimientoDetalle.csv");
 
-        boolean append = archivo.exists(); // si ya existe, agregamos
+        boolean append = archivo.exists() && archivo.length() > 0; // si ya existe, agregamos
 
             try (Writer writer = new FileWriter(archivo, true);
                  CSVPrinter printer = append
@@ -635,20 +648,75 @@ public class panelMovimientos extends javax.swing.JPanel {
                              .setHeader("movimientoEncabezado","codigoProducto","cantidad")
                              .build())) {
 
+                for(movimientoDetalle mov : lista){
                 // Escribir registros usando tu método toCSV()
-                printer.printRecord((Object[]) movEn.toCSV());
-
-                // Agregar también a la tabla
-                modeloMovimientosHistorial.addRow(new Object[]{
-                    movEn.getTipoMovimiento(),
-                    movEn.getFecha(),
-                    movEn.getMotivo()
-                });
+                printer.printRecord((Object[]) mov.toCSV());
+                
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
     }
-*/
+    public void cargarMovimientoEncabezado() throws FileNotFoundException, IOException{
+        modeloMovimientosHistorial.setRowCount(0);
+        listaMovimientoEncabezado.clear();
+        
+        File archivo = new File("assets/movimientoEncabezado.csv");
+        
+        Reader reader = new FileReader(archivo);
+        CSVFormat format = CSVFormat.DEFAULT.builder()
+                    .setHeader("identificador","tipoMovimiento","fecha","motivo")
+                    .setSkipHeaderRecord(true)
+                    .build();
+        
+        Iterable<CSVRecord> records = format.parse(reader);
+        
+        for (CSVRecord record : records) {
+                int identificador = Integer.parseInt(record.get("identificador"));
+                String tipoMovimiento = record.get("tipoMovimiento");
+                String fecha = record.get("fecha");
+                String motivo = record.get("motivo");
+                listaMovimientoEncabezado.add(new movimientoEncabezado(
+                                                    identificador
+                                                    ,tipoMovimiento
+                                                    ,fecha
+                                                    ,motivo));
+                
+                modeloMovimientosHistorial.addRow(new Object[]{
+                                                    identificador
+                                                    ,tipoMovimiento
+                                                    ,fecha
+                                                    ,motivo       
+                                                    });
+            }
+        
+    }
+    public void cargarMovimientoDetalle() throws FileNotFoundException, IOException{
+        File archivo = new File("assets/movimientoDetalle.csv");
+        
+        Reader reader = new FileReader(archivo);
+        CSVFormat format = CSVFormat.DEFAULT.builder()
+                    .setHeader("movimientoEncabezado","codigoProducto","cantidad")
+                    .setSkipHeaderRecord(true)
+                    .build();
+        
+        Iterable<CSVRecord> records = format.parse(reader);
+        
+        for (CSVRecord record : records) {
+                int movimientoEncabezado = Integer.parseInt(record.get("movimientoEncabezado"));
+                String codigoProducto = record.get("codigoProducto");
+                int cantidad = Integer.parseInt(record.get("cantidad"));
+   
+                movimientoEncabezado movEn = listaMovimientoEncabezado.get(movimientoEncabezado);
+
+                listaMovimientoDetalle.add(new movimientoDetalle(
+                                            movEn
+                                            ,codigoProducto
+                                            ,cantidad
+                                            ));
+            }
+        
+    }
     public void cargarCategorias() throws FileNotFoundException, IOException{
             File archivo = new File("assets/abarrotes.csv");
 
