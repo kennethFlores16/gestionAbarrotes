@@ -8,3 +8,6 @@ codigo,nombre,categoria,costo,precio,stockActual,stockMinimo,tiempoEntrega,estim
 0121,Aceite,ABAR01,32.0,42.0,0,1,1,6,true
 080,Birote,ABAR03,8.0,10.0,52,25,1,30,true
 001,Aceite,ABAR06,4.0,2.0,7,7,7,7,true
+1,Prueba 1,ABAR04,10.0,15.0,10,5,2,3,true
+2,Prueba 2,ABAR05,10.0,15.0,10,5,1,1,true
+3,Producto 3,ABAR05,5.0,10.0,10,5,2,2,true
