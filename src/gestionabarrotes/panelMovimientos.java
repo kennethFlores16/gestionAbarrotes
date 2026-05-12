@@ -35,7 +35,7 @@ public class panelMovimientos extends javax.swing.JPanel {
     private ArrayList<movimientoEncabezado> listaMovimientoEncabezado = new ArrayList<>();
     private ArrayList<movimientoDetalle> listaMovimientoDetalle = new ArrayList<>();
     private ArrayList<movimientoDetalle> listaMovimientoDetalleTemporal  = new ArrayList<>();
-    DefaultTableModel modeloMovimientosAgregar,modeloMovimientosHistorial,modeloStockActual;
+    DefaultTableModel modeloMovimientosAgregar,modeloStockActual;
     public Color[] colores;
     private int contador,identificadorEn,filaSeleccionada;
     private String codigoDetalleTemp;
@@ -51,10 +51,6 @@ public class panelMovimientos extends javax.swing.JPanel {
         String[] columnasMovimientoAgregar = {"Movimiento","Codigo","Nombre","Cantidad"};
         modeloMovimientosAgregar = new DefaultTableModel(columnasMovimientoAgregar,0);
         tablaMovimientos.setModel(modeloMovimientosAgregar);
-        
-        String[] columnasMovimientoHistorial = {"Identificador","Tipo","Fecha","Motivo"};
-        modeloMovimientosHistorial = new DefaultTableModel(columnasMovimientoHistorial,0);
-        tablaHistorialMovimientos.setModel(modeloMovimientosHistorial);
         
         String[] columnasStock = {"Codigo","Nombre","Stock Actual","Stock Minimo","Tipo"};
         modeloStockActual = new DefaultTableModel(columnasStock,0); 
@@ -132,29 +128,6 @@ public class panelMovimientos extends javax.swing.JPanel {
                 }
             }
         });
-        
-        //Se añade un listener a la tabla, se utiliza una operación lambda para simplificar
-        tablaHistorialMovimientos.getSelectionModel().addListSelectionListener(e -> {
-            // Habilitar solo si hay una fila seleccionada
-            int fila = tablaHistorialMovimientos.getSelectedRow();
-            if (fila != -1) {
-               consultarMovimientoBt.setEnabled(true);
-               identificadorEn = Integer.parseInt(tablaHistorialMovimientos.getValueAt(fila,0).toString()); 
-            }else {
-               consultarMovimientoBt.setEnabled(false);
-            }
-        });
-        tablaMovimientos.getSelectionModel().addListSelectionListener(e -> {
-            // Habilitar solo si hay una fila seleccionada
-            int fila = tablaMovimientos.getSelectedRow();
-            if (fila != -1) {
-               eliminarDetalleBt.setEnabled(true);
-               codigoDetalleTemp = tablaMovimientos.getValueAt(fila,1).toString();
-               filaSeleccionada = tablaMovimientos.getSelectedRow();
-            }else {
-               eliminarDetalleBt.setEnabled(false);
-            }
-        });
     }
 
     @SuppressWarnings("unchecked")
@@ -163,6 +136,7 @@ public class panelMovimientos extends javax.swing.JPanel {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jComboBox1 = new javax.swing.JComboBox<>();
         movimientosRealizadosLb = new javax.swing.JLabel();
         contadorMovimientosLb = new javax.swing.JLabel();
         panelRegistroMovimiento = new javax.swing.JPanel();
@@ -173,7 +147,6 @@ public class panelMovimientos extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         motivoMovimientoTxt = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         codigoProductoMovimientoTxt = new javax.swing.JTextField();
         nombreProductoMovimientoTxt = new javax.swing.JTextField();
@@ -187,19 +160,11 @@ public class panelMovimientos extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         finalizarMovimientoBt = new javax.swing.JButton();
         cancelarMovimientoBt = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
         eliminarDetalleBt = new javax.swing.JButton();
         crearMovimientoBt = new javax.swing.JButton();
-        panelTabla = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablaHistorialMovimientos = new javax.swing.JTable();
-        jLabel5 = new javax.swing.JLabel();
-        consultarMovimientoBt = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        abritHistorialesBt = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tablaStockActual = new javax.swing.JTable();
-        jLabel11 = new javax.swing.JLabel();
-        abritHistorialesBt = new javax.swing.JButton();
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -213,6 +178,8 @@ public class panelMovimientos extends javax.swing.JPanel {
             }
         ));
         jScrollPane2.setViewportView(jTable2);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -243,17 +210,6 @@ public class panelMovimientos extends javax.swing.JPanel {
 
         jLabel4.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         jLabel4.setText("Motivo de Movimiento");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
-        );
 
         jLabel6.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
         jLabel6.setText("Detalle de Movimiento");
@@ -315,17 +271,6 @@ public class panelMovimientos extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
         eliminarDetalleBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); // NOI18N
         eliminarDetalleBt.setText("Eliminar Detalle");
         eliminarDetalleBt.setEnabled(false);
@@ -347,9 +292,9 @@ public class panelMovimientos extends javax.swing.JPanel {
         panelRegistroMovimientoLayout.setHorizontalGroup(
             panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
+                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4)
                     .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
                         .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -358,159 +303,97 @@ public class panelMovimientos extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(spinnerFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(spinnerFecha)))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel6)
+                    .addComponent(eliminarDetalleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(jLabel10))
+                    .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
+                            .addGap(245, 245, 245)
+                            .addComponent(cancelarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(finalizarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
+                        .addGap(247, 247, 247)
+                        .addComponent(añadirMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRegistroMovimientoLayout.createSequentialGroup()
+                        .addComponent(motivoMovimientoTxt)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(134, 134, 134))
-                            .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                                .addComponent(motivoMovimientoTxt)
-                                .addGap(18, 18, 18)
-                                .addComponent(crearMovimientoBt))))
+                        .addComponent(crearMovimientoBt))
                     .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
                         .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel9)
-                                .addComponent(cantidadProductoMovimientoTxt)
-                                .addComponent(jLabel7)
-                                .addComponent(codigoProductoMovimientoTxt)
-                                .addComponent(jLabel8)
-                                .addComponent(nombreProductoMovimientoTxt)
-                                .addComponent(añadirMovimientoBt, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE))
-                            .addComponent(jLabel6))
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(cantidadProductoMovimientoTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                                .addComponent(codigoProductoMovimientoTxt, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jLabel7))
+                        .addGap(20, 20, 20)
                         .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                                        .addComponent(eliminarDetalleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(cancelarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(finalizarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jScrollPane3)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRegistroMovimientoLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel10)
-                                .addGap(231, 231, 231)))))
-                .addGap(23, 23, 23))
+                            .addComponent(jLabel8)
+                            .addComponent(nombreProductoMovimientoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(20, 20, 20))
         );
         panelRegistroMovimientoLayout.setVerticalGroup(
             panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spinnerFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tipoMovimientoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(spinnerFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                        .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(motivoMovimientoTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                            .addComponent(crearMovimientoBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tipoMovimientoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                        .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codigoProductoMovimientoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(nombreProductoMovimientoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cantidadProductoMovimientoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(añadirMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(finalizarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cancelarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(eliminarDetalleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(motivoMovimientoTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addComponent(crearMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
+                .addComponent(jLabel6)
+                .addGap(10, 10, 10)
+                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(codigoProductoMovimientoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nombreProductoMovimientoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cantidadProductoMovimientoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(añadirMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(finalizarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cancelarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eliminarDetalleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20))
         );
 
-        panelTabla.setBackground(new java.awt.Color(204, 204, 204));
-
-        tablaHistorialMovimientos.setAutoCreateRowSorter(true);
-        tablaHistorialMovimientos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(tablaHistorialMovimientos);
-
-        jLabel5.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
-        jLabel5.setText("Historial de Movimientos");
-
-        consultarMovimientoBt.setFont(new java.awt.Font("Poppins SemiBold", 0, 12)); // NOI18N
-        consultarMovimientoBt.setText("Consultar Movimiento");
-        consultarMovimientoBt.setEnabled(false);
-        consultarMovimientoBt.addActionListener(new java.awt.event.ActionListener() {
+        abritHistorialesBt.setBackground(new java.awt.Color(219, 213, 33));
+        abritHistorialesBt.setForeground(new java.awt.Color(0, 0, 0));
+        abritHistorialesBt.setText("Historial");
+        abritHistorialesBt.setBorderPainted(false);
+        abritHistorialesBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                consultarMovimientoBtActionPerformed(evt);
+                abritHistorialesBtActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout panelTablaLayout = new javax.swing.GroupLayout(panelTabla);
-        panelTabla.setLayout(panelTablaLayout);
-        panelTablaLayout.setHorizontalGroup(
-            panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTablaLayout.createSequentialGroup()
-                .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelTablaLayout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addGroup(panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(consultarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelTablaLayout.createSequentialGroup()
-                        .addGap(136, 136, 136)
-                        .addComponent(jLabel5)))
-                .addContainerGap(15, Short.MAX_VALUE))
-        );
-        panelTablaLayout.setVerticalGroup(
-            panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTablaLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(consultarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
-        );
-
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         tablaStockActual.setAutoCreateRowSorter(true);
         tablaStockActual.setModel(new javax.swing.table.DefaultTableModel(
@@ -526,42 +409,6 @@ public class panelMovimientos extends javax.swing.JPanel {
         ));
         jScrollPane4.setViewportView(tablaStockActual);
 
-        jLabel11.setFont(new java.awt.Font("Poppins SemiBold", 0, 14)); // NOI18N
-        jLabel11.setText("Stock Actual");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel11)
-                        .addGap(236, 236, 236)))
-                .addContainerGap(7, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15))
-        );
-
-        abritHistorialesBt.setText("Historial");
-        abritHistorialesBt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                abritHistorialesBtActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -573,14 +420,14 @@ public class panelMovimientos extends javax.swing.JPanel {
                         .addComponent(abritHistorialesBt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(movimientosRealizadosLb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(contadorMovimientosLb))
-                    .addComponent(panelRegistroMovimiento, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(panelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(contadorMovimientosLb)
+                        .addGap(23, 23, 23))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(20, 20, 20))
+                        .addComponent(panelRegistroMovimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(20, 20, 20))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -590,13 +437,11 @@ public class panelMovimientos extends javax.swing.JPanel {
                     .addComponent(movimientosRealizadosLb)
                     .addComponent(contadorMovimientosLb)
                     .addComponent(abritHistorialesBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
-                .addComponent(panelRegistroMovimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelTabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(16, 16, 16))
+                    .addComponent(panelRegistroMovimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4))
+                .addGap(20, 20, 20))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -669,28 +514,6 @@ public class panelMovimientos extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_codigoProductoMovimientoTxtActionPerformed
 
-    private void consultarMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarMovimientoBtActionPerformed
-        try {
-            cargarMovimientoDetalle();
-        } catch (IOException ex) {
-            Logger.getLogger(panelMovimientos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
-        movimientoEncabezado encabezado = null;
-        for(movimientoEncabezado e : listaMovimientoEncabezado){
-            if(e.getIdentificador() == identificadorEn){
-                encabezado = e;
-            }
-        }
-        
-        consultaMovimientoDetalle interfaz = new consultaMovimientoDetalle(parent
-                                                                           ,true
-                                                                           ,encabezado
-                                                                           ,listaMovimientoDetalle);
-        interfaz.setLocationRelativeTo(null);
-        interfaz.setVisible(true);
-    }//GEN-LAST:event_consultarMovimientoBtActionPerformed
-
     private void eliminarDetalleBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarDetalleBtActionPerformed
         listaMovimientoDetalleTemporal.removeIf(
                 movDe -> movDe.getCodigoProducto().equals(codigoDetalleTemp)
@@ -725,10 +548,10 @@ public class panelMovimientos extends javax.swing.JPanel {
     private void abritHistorialesBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abritHistorialesBtActionPerformed
         Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
         verHistoriales interfaz = new verHistoriales(parent
-                                                                            ,true
-                                                                            ,listaProductos
-                                                                            ,listaMovimientoEncabezado
-                                                                            ,listaMovimientoDetalle);
+            ,true
+            ,listaProductos
+            ,listaMovimientoEncabezado
+            ,listaMovimientoDetalle);
         interfaz.setLocationRelativeTo(null);
         interfaz.setVisible(true);
     }//GEN-LAST:event_abritHistorialesBtActionPerformed
@@ -765,13 +588,6 @@ public class panelMovimientos extends javax.swing.JPanel {
                 printer.printRecord((Object[]) movEn.toCSV());
                 listaMovimientoEncabezado.add(movEn);
 
-                // Agregar también a la tabla
-                modeloMovimientosHistorial.addRow(new Object[]{
-                    movEn.getIdentificador(),
-                    movEn.getTipoMovimiento(),
-                    movEn.getFecha(),
-                    movEn.getMotivo()
-                });
                 contador = listaMovimientoEncabezado.size();
                 contadorMovimientosLb.setText(String.valueOf(contador));
                 System.out.println(contador);
@@ -800,8 +616,7 @@ public class panelMovimientos extends javax.swing.JPanel {
                 e.printStackTrace();
             }
     }
-    public void cargarMovimientoEncabezado() throws FileNotFoundException, IOException{
-        modeloMovimientosHistorial.setRowCount(0);
+    public void cargarMovimientoEncabezado() throws FileNotFoundException, IOException{;
         listaMovimientoEncabezado.clear();
         
         File archivo = new File("assets/movimientoEncabezado.csv");
@@ -824,13 +639,6 @@ public class panelMovimientos extends javax.swing.JPanel {
                                                     ,tipoMovimiento
                                                     ,fecha
                                                     ,motivo));
-                
-                modeloMovimientosHistorial.addRow(new Object[]{
-                                                    identificador
-                                                    ,tipoMovimiento
-                                                    ,fecha
-                                                    ,motivo       
-                                                    });
             }
         
     }
@@ -1021,26 +829,20 @@ public class panelMovimientos extends javax.swing.JPanel {
     private javax.swing.JButton cancelarMovimientoBt;
     private javax.swing.JTextField cantidadProductoMovimientoTxt;
     private javax.swing.JTextField codigoProductoMovimientoTxt;
-    private javax.swing.JButton consultarMovimientoBt;
     private javax.swing.JLabel contadorMovimientosLb;
     private javax.swing.JButton crearMovimientoBt;
     private javax.swing.JButton eliminarDetalleBt;
     private javax.swing.JButton finalizarMovimientoBt;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -1049,9 +851,7 @@ public class panelMovimientos extends javax.swing.JPanel {
     private javax.swing.JLabel movimientosRealizadosLb;
     private javax.swing.JTextField nombreProductoMovimientoTxt;
     private javax.swing.JPanel panelRegistroMovimiento;
-    private javax.swing.JPanel panelTabla;
     private javax.swing.JSpinner spinnerFecha;
-    private javax.swing.JTable tablaHistorialMovimientos;
     private javax.swing.JTable tablaMovimientos;
     private javax.swing.JTable tablaStockActual;
     private javax.swing.JComboBox<String> tipoMovimientoCombo;
