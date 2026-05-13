@@ -1,11 +1,14 @@
 
 package gestionabarrotes;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.ArrayList;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 public class verHistoriales extends javax.swing.JDialog {
 
@@ -26,10 +29,16 @@ public class verHistoriales extends javax.swing.JDialog {
         
         initComponents();
         
-        String[] titulos = {"Codigo","Nombre","Tipo Movimiento","Cantidad"};
+        String[] titulos = {"Fecha","Encabezado","Codigo","Nombre","Tipo Movimiento","Cantidad"};
         modeloMovProductos.setColumnIdentifiers(titulos);
         
-        movimientosPorProductoTxt.setModel(modeloMovProductos);
+        movimientosPorProductoTabla.setModel(modeloMovProductos);
+        TableRowSorter<DefaultTableModel> sorter  = new TableRowSorter<>(modeloMovProductos);
+        movimientosPorProductoTabla.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
         
         llenarTabla();
         
@@ -49,13 +58,17 @@ public class verHistoriales extends javax.swing.JDialog {
     public void llenarTabla(){
         modeloMovProductos.setRowCount(0);
         for(movimientoDetalle detalle : listaMovDe){
+            System.out.println(detalle.toString());
             for(producto p : listaProductos){
-                if(p.getCodigo().contains(detalle.getCodigoProducto())){
-                    modeloMovProductos.addRow(new Object[]{
-                                                                                detalle.getCodigoProducto()
+                if(p.getCodigo().trim().equals(detalle.getCodigoProducto().trim())){
+                    String tipoMovimiento = detalle.getEncabezado().getTipoMovimiento() + ": " + detalle.getEncabezado().getMotivo();
+                    modeloMovProductos.addRow(new Object[]{detalle.getEncabezado().getFecha()
+                                                                                ,detalle.getEncabezado().getIdentificador()
+                                                                                ,detalle.getCodigoProducto()
                                                                                 ,p.getNombre()
-                                                                                ,detalle.getEncabezado().getTipoMovimiento()
+                                                                                ,tipoMovimiento
                                                                                 ,detalle.getCantidad()});
+                    break;
                 }
             }
             
@@ -70,13 +83,20 @@ public class verHistoriales extends javax.swing.JDialog {
            modeloMovProductos.setRowCount(0);
             for(movimientoDetalle detalle : listaMovDe){
                 for(producto p : listaProductos){
-                    if(p.getCodigo().contains(detalle.getCodigoProducto())){
-                        if(p.getNombre().contains(parametro) || detalle.getCodigoProducto().contains(parametro)){
-                            modeloMovProductos.addRow(new Object[]{
-                                                                                    detalle.getCodigoProducto()
-                                                                                    ,p.getNombre()
-                                                                                    ,detalle.getEncabezado().getTipoMovimiento()
-                                                                                    ,detalle.getCantidad()});
+                   if(p.getCodigo().trim().equals(detalle.getCodigoProducto().trim())){
+                        if(p.getNombre().trim().contains(parametro) || detalle.getCodigoProducto().trim().contains(parametro)){
+                             String tipoMovimiento = "";
+                            if(detalle.getEncabezado().getTipoMovimiento().equals("Ajuste")){
+                                tipoMovimiento = detalle.getEncabezado().getTipoMovimiento() + ": " + detalle.getEncabezado().getMotivo();
+                            }else{
+                                tipoMovimiento = detalle.getEncabezado().getTipoMovimiento();
+                            }
+                            modeloMovProductos.addRow(new Object[]{detalle.getEncabezado().getFecha()
+                                                                                        ,detalle.getEncabezado().getIdentificador()
+                                                                                        ,detalle.getCodigoProducto()
+                                                                                        ,p.getNombre()
+                                                                                        ,tipoMovimiento
+                                                                                        ,detalle.getCantidad()});
                         } 
                     }
                 }
@@ -94,7 +114,7 @@ public class verHistoriales extends javax.swing.JDialog {
         campoDeBusquedaTxt = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        movimientosPorProductoTxt = new javax.swing.JTable();
+        movimientosPorProductoTabla = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
 
@@ -103,8 +123,8 @@ public class verHistoriales extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         jLabel1.setText("Buscar un producto");
 
-        movimientosPorProductoTxt.setAutoCreateRowSorter(true);
-        movimientosPorProductoTxt.setModel(new javax.swing.table.DefaultTableModel(
+        movimientosPorProductoTabla.setAutoCreateRowSorter(true);
+        movimientosPorProductoTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -115,7 +135,7 @@ public class verHistoriales extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane3.setViewportView(movimientosPorProductoTxt);
+        jScrollPane3.setViewportView(movimientosPorProductoTabla);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -123,13 +143,13 @@ public class verHistoriales extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 713, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 961, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(campoDeBusquedaTxt)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(campoDeBusquedaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 822, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,28 +172,25 @@ public class verHistoriales extends javax.swing.JDialog {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(323, 323, 323)
                 .addComponent(jLabel3)
-                .addGap(234, 234, 234))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(26, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
                 .addComponent(jLabel3)
-                .addGap(22, 22, 22))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,6 +211,6 @@ public class verHistoriales extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable movimientosPorProductoTxt;
+    private javax.swing.JTable movimientosPorProductoTabla;
     // End of variables declaration//GEN-END:variables
 }

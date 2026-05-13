@@ -99,6 +99,17 @@ public class panelMovimientos extends javax.swing.JPanel {
         for (int i = 0; i < tablaStockActual.getColumnCount(); i++) {
             tablaStockActual.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
+        
+        tablaMovimientos.getSelectionModel().addListSelectionListener(e -> {
+                // Habilitar solo si hay una fila seleccionada
+                int fila = tablaMovimientos.getSelectedRow();
+                if (fila != -1) {
+                    eliminarDetalleBt.setEnabled(true);
+                    codigoDetalleTemp = tablaMovimientos.getValueAt(fila,1).toString();
+                }else {
+                    eliminarDetalleBt.setEnabled(false);
+                }
+            });
  
         codigoProductoMovimientoTxt.addKeyListener(new KeyAdapter() {
             @Override
@@ -110,21 +121,27 @@ public class panelMovimientos extends javax.swing.JPanel {
                         for(producto p : listaProductos){
                             if(p.getCodigo().equals(codigo)){
                                 existe = true;
-                                if(p.isActivo()){
                                     nombreProductoMovimientoTxt.setText(p.getNombre());
                                     cantidadProductoMovimientoTxt.setText("1");
                                     cantidadProductoMovimientoTxt.requestFocus();
                                     
                                     break;
-                                }else{
-                                    JOptionPane.showMessageDialog(null,"Solo se pueden seleccionar productos activos");
-                                }
                             }   
                         }
                         if(!existe){
                             JOptionPane.showMessageDialog(null,"Este producto no existe");
                         }
 
+                }
+                
+            }
+        });
+        
+        cantidadProductoMovimientoTxt.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e){
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    añadirMovimiento();
                 }
             }
         });
@@ -161,7 +178,6 @@ public class panelMovimientos extends javax.swing.JPanel {
         finalizarMovimientoBt = new javax.swing.JButton();
         cancelarMovimientoBt = new javax.swing.JButton();
         eliminarDetalleBt = new javax.swing.JButton();
-        crearMovimientoBt = new javax.swing.JButton();
         abritHistorialesBt = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tablaStockActual = new javax.swing.JTable();
@@ -280,13 +296,6 @@ public class panelMovimientos extends javax.swing.JPanel {
             }
         });
 
-        crearMovimientoBt.setText("Crear");
-        crearMovimientoBt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                crearMovimientoBtActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelRegistroMovimientoLayout = new javax.swing.GroupLayout(panelRegistroMovimiento);
         panelRegistroMovimiento.setLayout(panelRegistroMovimientoLayout);
         panelRegistroMovimientoLayout.setHorizontalGroup(
@@ -310,20 +319,15 @@ public class panelMovimientos extends javax.swing.JPanel {
                     .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
                         .addGap(160, 160, 160)
                         .addComponent(jLabel10))
-                    .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
-                            .addGap(245, 245, 245)
-                            .addComponent(cancelarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(finalizarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRegistroMovimientoLayout.createSequentialGroup()
+                        .addGap(245, 245, 245)
+                        .addComponent(cancelarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(finalizarMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3)
                     .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
                         .addGap(247, 247, 247)
                         .addComponent(añadirMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRegistroMovimientoLayout.createSequentialGroup()
-                        .addComponent(motivoMovimientoTxt)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(crearMovimientoBt))
                     .addGroup(panelRegistroMovimientoLayout.createSequentialGroup()
                         .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -333,7 +337,8 @@ public class panelMovimientos extends javax.swing.JPanel {
                         .addGap(20, 20, 20)
                         .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
-                            .addComponent(nombreProductoMovimientoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(nombreProductoMovimientoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(motivoMovimientoTxt))
                 .addGap(20, 20, 20))
         );
         panelRegistroMovimientoLayout.setVerticalGroup(
@@ -354,9 +359,7 @@ public class panelMovimientos extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelRegistroMovimientoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(motivoMovimientoTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addComponent(crearMovimientoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(motivoMovimientoTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
                 .addGap(15, 15, 15)
                 .addComponent(jLabel6)
                 .addGap(10, 10, 10)
@@ -451,32 +454,10 @@ public class panelMovimientos extends javax.swing.JPanel {
 
     private void añadirMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_añadirMovimientoBtActionPerformed
         
-        if(encabezado !=null){
-            listaMovimientoDetalleTemporal.add(new movimientoDetalle(
-                                   encabezado,
-                                   codigoProductoMovimientoTxt.getText(),
-                                   Integer.parseInt(cantidadProductoMovimientoTxt.getText())
-            ));
-            modeloMovimientosAgregar.addRow(new Object[]{
-                                            listaMovimientoDetalleTemporal.getLast().getEncabezado().getIdentificador(),
-                                            listaMovimientoDetalleTemporal.getLast().getCodigoProducto(),
-                                            nombreProductoMovimientoTxt.getText(),
-                                            listaMovimientoDetalleTemporal.getLast().getCantidad()});
-            
-            codigoProductoMovimientoTxt.setText("");
-            nombreProductoMovimientoTxt.setText("");
-            cantidadProductoMovimientoTxt.setText("");
-            codigoProductoMovimientoTxt.requestFocus();
-        }else{
-            JOptionPane.showMessageDialog(null,"Necesita crear un movimiento antes de añadir un producto");
-            motivoMovimientoTxt.requestFocus();
-        }
-        
+                añadirMovimiento();
     }//GEN-LAST:event_añadirMovimientoBtActionPerformed
 
     private void cancelarMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarMovimientoBtActionPerformed
-        
-        if(encabezado != null && !motivoMovimientoTxt.getText().isEmpty()){
             int opcion = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea cancelar el movimiento?",
             "Confirmar activación", JOptionPane.YES_NO_OPTION);
             if(opcion == JOptionPane.YES_OPTION){
@@ -485,29 +466,41 @@ public class panelMovimientos extends javax.swing.JPanel {
                 listaMovimientoDetalleTemporal.clear();
                 limpiarCampos();
             }
-        }else{
-            JOptionPane.showMessageDialog(null, "No existe un encabezado que eliminar");
-        }
     }//GEN-LAST:event_cancelarMovimientoBtActionPerformed
 
     private void finalizarMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarMovimientoBtActionPerformed
-        if(encabezado != null && !listaMovimientoDetalleTemporal.isEmpty()){
-            boolean avanzar = procesarMovimiento(encabezado,listaMovimientoDetalleTemporal);
-            if(avanzar){guardarMovimientoEncabezado(encabezado);
-                guardarMovimientoDetalle(listaMovimientoDetalleTemporal);
-                listaMovimientoDetalleTemporal.clear();
-                limpiarCampos();
-                encabezado = null;
-
-                try {
-                    llenarTablaStock();
-                } catch (IOException ex) {
-                    Logger.getLogger(panelMovimientos.class.getName()).log(Level.SEVERE, null, ex);
-                }
+       if(!listaMovimientoDetalleTemporal.isEmpty()){
+                if(tipoMovimientoCombo.getSelectedItem().toString().equals("Ajuste")){
+                        if(!motivoMovimientoTxt.getText().isEmpty()){
+                            encabezado = new movimientoEncabezado(
+                                        contador,
+                                        tipoMovimientoCombo.getSelectedItem().toString(),
+                                        spinnerFecha.getValue().toString(),
+                                        motivoMovimientoTxt.getText()
+                                );
+                           for(movimientoDetalle detalle : listaMovimientoDetalleTemporal){
+                                    detalle.setEncabezado(encabezado);
+                           }
+                           finalizarGuardado();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Para hacer un ajuste  es necesario añadir un motivo");
+                        }
+            } else{
+                encabezado = new movimientoEncabezado(
+                                contador,
+                                tipoMovimientoCombo.getSelectedItem().toString(),
+                                spinnerFecha.getValue().toString(),
+                                motivoMovimientoTxt.getText()
+                        );
+                  for(movimientoDetalle detalle : listaMovimientoDetalleTemporal){
+                        detalle.setEncabezado(encabezado);
+                   }
+                  finalizarGuardado();
             }
-        }else{
-            JOptionPane.showMessageDialog(null,"No hay registro que guardar aún");
-        }
+       }else{
+           JOptionPane.showMessageDialog(null, "No hay detalles que añadir");
+       }
+         
     }//GEN-LAST:event_finalizarMovimientoBtActionPerformed
 
     private void codigoProductoMovimientoTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codigoProductoMovimientoTxtActionPerformed
@@ -521,37 +514,23 @@ public class panelMovimientos extends javax.swing.JPanel {
         modeloMovimientosAgregar.removeRow(filaSeleccionada);
     }//GEN-LAST:event_eliminarDetalleBtActionPerformed
 
-    private void crearMovimientoBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearMovimientoBtActionPerformed
-        if(tipoMovimientoCombo.getSelectedItem().toString().equals("Ajuste")){
-            if(!motivoMovimientoTxt.getText().isEmpty()){
-                encabezado = new movimientoEncabezado(
-                            contador,
-                            tipoMovimientoCombo.getSelectedItem().toString(),
-                            spinnerFecha.getValue().toString(),
-                            motivoMovimientoTxt.getText()
-                    );
-                    codigoProductoMovimientoTxt.requestFocus();
-            }else{
-                JOptionPane.showMessageDialog(null, "Para hacer un ajuste  es necesario añadir un motivo");
-            }
-        } else{
-            encabezado = new movimientoEncabezado(
-                            contador,
-                            tipoMovimientoCombo.getSelectedItem().toString(),
-                            spinnerFecha.getValue().toString(),
-                            motivoMovimientoTxt.getText()
-                    );
-                    codigoProductoMovimientoTxt.requestFocus();
-        }
-    }//GEN-LAST:event_crearMovimientoBtActionPerformed
-
     private void abritHistorialesBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abritHistorialesBtActionPerformed
+        try {
+            cargarMovimientoEncabezado();
+            cargarMovimientoDetalle();
+        } catch (IOException ex) {
+            Logger.getLogger(panelMovimientos.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
         verHistoriales interfaz = new verHistoriales(parent
             ,true
             ,listaProductos
             ,listaMovimientoEncabezado
             ,listaMovimientoDetalle);
+        
+        System.out.println("Encabezados: " + listaMovimientoEncabezado.size());
+System.out.println("Detalles: " + listaMovimientoDetalle.size());
+
         interfaz.setLocationRelativeTo(null);
         interfaz.setVisible(true);
     }//GEN-LAST:event_abritHistorialesBtActionPerformed
@@ -570,6 +549,30 @@ public class panelMovimientos extends javax.swing.JPanel {
         cantidadProductoMovimientoTxt.setText("");
         
         modeloMovimientosAgregar.setRowCount(0);
+    }
+    private void añadirMovimiento(){
+        if(!codigoProductoMovimientoTxt.getText().isEmpty()
+                         && !nombreProductoMovimientoTxt.getText().isEmpty()
+                         && !cantidadProductoMovimientoTxt.getText().isEmpty()){
+                
+                          listaMovimientoDetalleTemporal.add(new movimientoDetalle(
+                                           null,
+                                           codigoProductoMovimientoTxt.getText(),
+                                           Integer.parseInt(cantidadProductoMovimientoTxt.getText())
+                  ));                      
+                           modeloMovimientosAgregar.addRow(new Object[]{
+                                                        contador,
+                                                        listaMovimientoDetalleTemporal.getLast().getCodigoProducto(),
+                                                        nombreProductoMovimientoTxt.getText(),
+                                                        listaMovimientoDetalleTemporal.getLast().getCantidad()});
+
+                          codigoProductoMovimientoTxt.setText("");
+                          nombreProductoMovimientoTxt.setText("");
+                          cantidadProductoMovimientoTxt.setText("");
+                          codigoProductoMovimientoTxt.requestFocus();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Debes llenar todas los campos de detalle");
+                }
     }
     public void guardarMovimientoEncabezado(movimientoEncabezado movEn){
         System.out.println(contador);
@@ -615,6 +618,26 @@ public class panelMovimientos extends javax.swing.JPanel {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+    }
+    private void finalizarGuardado(){
+        if(encabezado != null && !listaMovimientoDetalleTemporal.isEmpty()){
+            boolean avanzar = procesarMovimiento(encabezado,listaMovimientoDetalleTemporal);
+            if(avanzar){guardarMovimientoEncabezado(encabezado);
+                guardarMovimientoDetalle(listaMovimientoDetalleTemporal);
+                listaMovimientoDetalleTemporal.clear();
+                limpiarCampos();
+                encabezado = null;
+                JOptionPane.showMessageDialog(null,"Datos almacenados correctamente");
+
+                try {
+                    llenarTablaStock();
+                } catch (IOException ex) {
+                    Logger.getLogger(panelMovimientos.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null,"No hay registro que guardar aún");
+        }
     }
     public void cargarMovimientoEncabezado() throws FileNotFoundException, IOException{;
         listaMovimientoEncabezado.clear();
@@ -685,15 +708,21 @@ public class panelMovimientos extends javax.swing.JPanel {
                 listaCategoria.add(new objetoCategoria(codigo,nombre));
             }
     }
-    public boolean procesarMovimiento(movimientoEncabezado movEn,ArrayList<movimientoDetalle> lista){
+    private boolean procesarMovimiento(movimientoEncabezado movEn,ArrayList<movimientoDetalle> lista){
         if(movEn.getTipoMovimiento().equalsIgnoreCase("Entrada")){
             for(movimientoDetalle movDe : lista){
                 String codigo = movDe.getCodigoProducto();
                 for(producto p : listaProductos){
                     if(p.getCodigo().equalsIgnoreCase(codigo)){
-                        int stockActual = p.getStockActual();
+                        if(p.isActivo()){
+                            int stockActual = p.getStockActual();
                         p.setStockActual(stockActual + movDe.getCantidad());
                         break;
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Solo puede realizar ajustes a productos desactivados");
+                            return false;
+                        }
+                        
                     }
                 }
             }
@@ -704,14 +733,20 @@ public class panelMovimientos extends javax.swing.JPanel {
                 String codigo = movDe.getCodigoProducto();
                 for(producto p : listaProductos){
                     if(p.getCodigo().equalsIgnoreCase(codigo)){
-                        int stockActual = p.getStockActual();
-                        if(stockActual >= movDe.getCantidad()){
-                            p.setStockActual(stockActual - movDe.getCantidad());
-                            break;
+                        if(p.isActivo()){
+                            int stockActual = p.getStockActual();
+                            if(stockActual >= movDe.getCantidad()){
+                                p.setStockActual(stockActual - movDe.getCantidad());
+                                break;
+                            }else{
+                               JOptionPane.showMessageDialog(null,"Comprueba que el stock de los productos sea suficiente");
+                               return false;
+                            }
                         }else{
-                           JOptionPane.showMessageDialog(null,"Comprueba que el stock de los productos sea suficiente");
-                           return false;
+                            JOptionPane.showMessageDialog(null, "Solo puede realizar ajustes a productos desactivados");
+                            return false;
                         }
+                       
                     }
                 }
             }
@@ -734,6 +769,7 @@ public class panelMovimientos extends javax.swing.JPanel {
     }
     public void cargarProductos() throws FileNotFoundException, IOException{
         File archivo = new File("assets/productos.csv");
+        listaMovimientoDetalle.clear();
         
         Reader reader = new FileReader(archivo);
         CSVFormat format = CSVFormat.DEFAULT.builder()
@@ -788,7 +824,6 @@ public class panelMovimientos extends javax.swing.JPanel {
                 stock = "Normal";
             }
             
-            if(p.isActivo()){
                 modeloStockActual.addRow(new Object[]{
                     p.getCodigo(),
                     p.getNombre(),
@@ -796,7 +831,6 @@ public class panelMovimientos extends javax.swing.JPanel {
                     p.getStockMinimo(),
                     stock
                 });
-            }
             
         }
         
@@ -830,7 +864,6 @@ public class panelMovimientos extends javax.swing.JPanel {
     private javax.swing.JTextField cantidadProductoMovimientoTxt;
     private javax.swing.JTextField codigoProductoMovimientoTxt;
     private javax.swing.JLabel contadorMovimientosLb;
-    private javax.swing.JButton crearMovimientoBt;
     private javax.swing.JButton eliminarDetalleBt;
     private javax.swing.JButton finalizarMovimientoBt;
     private javax.swing.JComboBox<String> jComboBox1;
