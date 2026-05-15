@@ -6,8 +6,9 @@ public class movimientoDetalle {
     private String codigoProducto;
     private int cantidad;
     
-    public movimientoDetalle(movimientoEncabezado encabezado,
-            String codigoProducto, int cantidad){
+    public movimientoDetalle(movimientoEncabezado encabezado
+                            ,String codigoProducto
+                            ,int cantidad){
         this.encabezado = encabezado;
         this.codigoProducto = codigoProducto;
         this.cantidad = cantidad;
@@ -36,5 +37,16 @@ public class movimientoDetalle {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-    
+    public String[] toCSV(){
+       return new String[]{
+           String.valueOf(encabezado.getIdentificador()),
+           codigoProducto,
+           String.valueOf(cantidad)
+       };
+   }
+
+    @Override
+    public String toString() {
+        return "movimientoDetalle{" + "encabezado=" + encabezado + ", codigoProducto=" + codigoProducto + ", cantidad=" + cantidad + '}';
+    }
 }

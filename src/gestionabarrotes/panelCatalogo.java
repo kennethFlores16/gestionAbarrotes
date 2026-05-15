@@ -54,15 +54,15 @@ public class panelCatalogo extends javax.swing.JPanel {
         
         llenarTabla(soloActivos);
             //Se añade un listener a la tabla, se utiliza una operación lambda para simplificar
-                productosTabla.getSelectionModel().addListSelectionListener(e -> {
-                    // Habilitar solo si hay una fila seleccionada
-                    int fila = productosTabla.getSelectedRow();
-                    if (fila != -1) {
-                        editarProductoBt.setEnabled(true);
-                        codigoProducto = productosTabla.getValueAt(fila,0).toString();
-                    }else {
-                        editarProductoBt.setEnabled(false);
-                    }
+            productosTabla.getSelectionModel().addListSelectionListener(e -> {
+                // Habilitar solo si hay una fila seleccionada
+                int fila = productosTabla.getSelectedRow();
+                if (fila != -1) {
+                    editarProductoBt.setEnabled(true);
+                    codigoProducto = productosTabla.getValueAt(fila,0).toString();
+                }else {
+                    editarProductoBt.setEnabled(false);
+                }
             });
                 
             busquedaProductoTxt.getDocument().addDocumentListener(new DocumentListener() {
@@ -125,6 +125,11 @@ public class panelCatalogo extends javax.swing.JPanel {
         for (int i = 0; i < productosTabla.getColumnCount(); i++) {
             productosTabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
+    }
+    public void inicializar() throws IOException{
+        listaProductos.clear();
+        cargarProductos();
+        llenarTabla(soloActivos);
     }
     
     public void cargarCategorias() throws FileNotFoundException, IOException{
@@ -411,7 +416,7 @@ public class panelCatalogo extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(verProductosDesactivadosToggleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(verProductosDesactivadosToggleBt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(panelBusquedaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -421,7 +426,7 @@ public class panelCatalogo extends javax.swing.JPanel {
                         .addComponent(editarProductoBt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
