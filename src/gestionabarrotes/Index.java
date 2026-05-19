@@ -12,6 +12,7 @@ public class Index extends javax.swing.JFrame {
     private panelCatalogo panelCatalogo;
     private panelDashboard panelDashboard;
     private panelMovimientos panelMovimientos;
+    private panelConfiguracion panelConfiguracion;
     public Color[] colores = {
                 new Color(145,199,87), //Primario
                 Color.WHITE, //Fondo
@@ -27,10 +28,12 @@ public class Index extends javax.swing.JFrame {
         panelDashboard = new panelDashboard();
         panelCatalogo = new panelCatalogo(colores);
         panelMovimientos = new panelMovimientos(colores);
+        panelConfiguracion = new panelConfiguracion();
         
         contGeneral.add(panelDashboard,"Dashboard");
         contGeneral.add(panelCatalogo,"Catalogo");
         contGeneral.add(panelMovimientos,"Movimientos");
+        contGeneral.add(panelConfiguracion,"Configuracion");
     }
 
     @SuppressWarnings("unchecked")
@@ -202,7 +205,7 @@ public class Index extends javax.swing.JFrame {
     }//GEN-LAST:event_cambioCatalogoBtActionPerformed
 
     private void cambioConfiguracionBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioConfiguracionBtActionPerformed
-
+        cardLayout.show(contGeneral, "Configuracion");
     }//GEN-LAST:event_cambioConfiguracionBtActionPerformed
 
     private void cambioDashboardBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioDashboardBtActionPerformed
