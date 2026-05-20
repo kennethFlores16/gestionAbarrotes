@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -522,17 +523,19 @@ public class panelMovimientos extends javax.swing.JPanel {
             Logger.getLogger(panelMovimientos.class.getName()).log(Level.SEVERE, null, ex);
         }
         Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
-        verHistoriales interfaz = new verHistoriales(parent
-            ,true
-            ,listaProductos
-            ,listaMovimientoEncabezado
-            ,listaMovimientoDetalle);
-        
-        System.out.println("Encabezados: " + listaMovimientoEncabezado.size());
-System.out.println("Detalles: " + listaMovimientoDetalle.size());
-
-        interfaz.setLocationRelativeTo(null);
-        interfaz.setVisible(true);
+        verHistoriales interfaz;
+        try {
+            interfaz = new verHistoriales(parent
+                    ,true
+                    ,listaProductos
+                    ,listaMovimientoEncabezado
+                    ,listaMovimientoDetalle);
+            
+             interfaz.setLocationRelativeTo(null);
+             interfaz.setVisible(true);
+        } catch (ParseException ex) {
+            Logger.getLogger(panelMovimientos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_abritHistorialesBtActionPerformed
 
     public void inicializar() throws IOException{

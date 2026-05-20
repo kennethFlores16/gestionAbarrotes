@@ -1,18 +1,24 @@
 
 package gestionabarrotes;
 
+import com.formdev.flatlaf.json.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 public class verHistoriales extends javax.swing.JDialog {
 
-    DefaultTableModel modeloMovProductos = new DefaultTableModel();
+    DefaultTableModel modeloMovProductos;
     public ArrayList<producto> listaProductos = new ArrayList<>();
     private ArrayList<movimientoEncabezado> listaMovEn= new ArrayList<>();
     private ArrayList<movimientoDetalle> listaMovDe = new ArrayList<>();
@@ -20,7 +26,7 @@ public class verHistoriales extends javax.swing.JDialog {
     public verHistoriales(java.awt.Frame parent, boolean modal,
                                      ArrayList<producto> listaProductos,
                                      ArrayList<movimientoEncabezado> listaMovEn,
-                                     ArrayList<movimientoDetalle> listaMovDe) {
+                                     ArrayList<movimientoDetalle> listaMovDe) throws java.text.ParseException {
         super(parent, modal);
        
         this.listaProductos = listaProductos;
@@ -30,7 +36,19 @@ public class verHistoriales extends javax.swing.JDialog {
         initComponents();
         
         String[] titulos = {"Fecha","Encabezado","Codigo","Nombre","Tipo Movimiento","Cantidad"};
-        modeloMovProductos.setColumnIdentifiers(titulos);
+        modeloMovProductos = new DefaultTableModel(new Object[]{"Fecha"
+                                                                                                            ,"Encabezado"
+                                                                                                            ,"Codigo"
+                                                                                                            ,"Nombre"
+                                                                                                            ,"Tipo Movimiento"
+                                                                                                            ,"Cantidad"},0){
+                @Override
+                public Class<?> getColumnClass(int columnIndex) {
+                    if (columnIndex == 0) return Date.class; // primera columna es Date
+                    if (columnIndex == 5) return Integer.class; // ejemplo: cantidad numérica
+                    return String.class;
+                }
+        };
         
         movimientosPorProductoTabla.setModel(modeloMovProductos);
         TableRowSorter<DefaultTableModel> sorter  = new TableRowSorter<>(modeloMovProductos);
@@ -40,29 +58,61 @@ public class verHistoriales extends javax.swing.JDialog {
         sorter.setSortKeys(sortKeys);
         sorter.sort();
         
+        movimientosPorProductoTabla.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            @Override
+            protected void setValue(Object value) {
+                if (value instanceof Date) {
+                    setText(sdf.format((Date) value));
+                } else {
+                    super.setValue(value);
+                }
+            }
+        });
+
+        
         llenarTabla();
         
         campoDeBusquedaTxt.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
-                public void insertUpdate(DocumentEvent e) { filtrarTabla();
+                public void insertUpdate(DocumentEvent e) { try {
+                    filtrarTabla();
+                    } catch (java.text.ParseException ex) {
+                        Logger.getLogger(verHistoriales.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 @Override
-                public void removeUpdate(DocumentEvent e) { filtrarTabla();
+                public void removeUpdate(DocumentEvent e) { try {
+                    filtrarTabla();
+                    } catch (java.text.ParseException ex) {
+                        Logger.getLogger(verHistoriales.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 @Override
-                public void changedUpdate(DocumentEvent e) { filtrarTabla();
+                public void changedUpdate(DocumentEvent e) { try {
+                    filtrarTabla();
+                    } catch (java.text.ParseException ex) {
+                        Logger.getLogger(verHistoriales.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }       
             });
     }
     
-    public void llenarTabla(){
+    public void llenarTabla() throws java.text.ParseException{
         modeloMovProductos.setRowCount(0);
         for(movimientoDetalle detalle : listaMovDe){
-            System.out.println(detalle.toString());
             for(producto p : listaProductos){
                 if(p.getCodigo().trim().equals(detalle.getCodigoProducto().trim())){
                     String tipoMovimiento = detalle.getEncabezado().getTipoMovimiento() + ": " + detalle.getEncabezado().getMotivo();
-                    modeloMovProductos.addRow(new Object[]{detalle.getEncabezado().getFecha()
+                    String fechaTexto = detalle.getEncabezado().getFecha();
+                    Date fecha = null;
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.ENGLISH);
+                     try {
+                        fecha = sdf.parse(fechaTexto);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    modeloMovProductos.addRow(new Object[]{fecha
                                                                                 ,detalle.getEncabezado().getIdentificador()
                                                                                 ,detalle.getCodigoProducto()
                                                                                 ,p.getNombre()
@@ -74,7 +124,7 @@ public class verHistoriales extends javax.swing.JDialog {
             
         }
     }
-   public void filtrarTabla(){
+   public void filtrarTabla() throws java.text.ParseException{
        String parametro = campoDeBusquedaTxt.getText();
        
        if(parametro.isEmpty()){
@@ -91,7 +141,17 @@ public class verHistoriales extends javax.swing.JDialog {
                             }else{
                                 tipoMovimiento = detalle.getEncabezado().getTipoMovimiento();
                             }
-                            modeloMovProductos.addRow(new Object[]{detalle.getEncabezado().getFecha()
+                            String fechaTexto = detalle.getEncabezado().getFecha();
+                            Date fecha = null;
+                            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.ENGLISH);
+                             try {
+                                fecha = sdf.parse(fechaTexto);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            
+                            
+                            modeloMovProductos.addRow(new Object[]{fecha
                                                                                         ,detalle.getEncabezado().getIdentificador()
                                                                                         ,detalle.getCodigoProducto()
                                                                                         ,p.getNombre()

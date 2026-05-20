@@ -49,7 +49,6 @@ public class panelAnalisisInventario extends javax.swing.JPanel {
     }
     public void calculoConsumoTotal(){
         consumoTotal = 0;
-       
         for(movimientoEncabezado movEn : listaMovimientoEncabezado){
                   if(movEn.getTipoMovimiento().equals("Salida")){
                           for(movimientoDetalle movDe : listaMovimientoDetalle){
