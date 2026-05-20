@@ -289,6 +289,7 @@ public class panelConfiguracion extends javax.swing.JPanel {
     private void guardarConfiguracionesBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarConfiguracionesBtActionPerformed
         guardarConfiguraciones();
         try {
+            
             cargarConfiguraciones();
         } catch (IOException ex) {
             Logger.getLogger(panelConfiguracion.class.getName()).log(Level.SEVERE, null, ex);

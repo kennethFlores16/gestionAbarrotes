@@ -102,10 +102,10 @@ public class panelMovimientos extends javax.swing.JPanel {
         
         tablaMovimientos.getSelectionModel().addListSelectionListener(e -> {
                 // Habilitar solo si hay una fila seleccionada
-                int fila = tablaMovimientos.getSelectedRow();
-                if (fila != -1) {
+                filaSeleccionada = tablaMovimientos.getSelectedRow();
+                if (filaSeleccionada != -1) {
                     eliminarDetalleBt.setEnabled(true);
-                    codigoDetalleTemp = tablaMovimientos.getValueAt(fila,1).toString();
+                    codigoDetalleTemp = tablaMovimientos.getValueAt(filaSeleccionada,1).toString();
                 }else {
                     eliminarDetalleBt.setEnabled(false);
                 }

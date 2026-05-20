@@ -13,6 +13,7 @@ public class Index extends javax.swing.JFrame {
     private panelDashboard panelDashboard;
     private panelMovimientos panelMovimientos;
     private panelConfiguracion panelConfiguracion;
+    private panelAnalisisInventario panelAnalisis;
     public Color[] colores = {
                 new Color(145,199,87), //Primario
                 Color.WHITE, //Fondo
@@ -29,10 +30,12 @@ public class Index extends javax.swing.JFrame {
         panelCatalogo = new panelCatalogo(colores);
         panelMovimientos = new panelMovimientos(colores);
         panelConfiguracion = new panelConfiguracion();
+        panelAnalisis = new panelAnalisisInventario();
         
         contGeneral.add(panelDashboard,"Dashboard");
         contGeneral.add(panelCatalogo,"Catalogo");
         contGeneral.add(panelMovimientos,"Movimientos");
+        contGeneral.add(panelAnalisis,"Analisis");
         contGeneral.add(panelConfiguracion,"Configuracion");
     }
 
@@ -229,6 +232,12 @@ public class Index extends javax.swing.JFrame {
     private void cambioAnalisisBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioAnalisisBtActionPerformed
         reinicarColoresBotones();
         cambioAnalisisBt.setBackground(colores[1]);
+        try {
+            panelAnalisis.inicializar();
+        } catch (IOException ex) {
+            Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cardLayout.show(contGeneral, "Analisis");
     }//GEN-LAST:event_cambioAnalisisBtActionPerformed
 
     private void cambioReporteBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambioReporteBtActionPerformed
