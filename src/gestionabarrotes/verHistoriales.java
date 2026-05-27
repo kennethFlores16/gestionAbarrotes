@@ -34,8 +34,7 @@ public class verHistoriales extends javax.swing.JDialog {
         this.listaMovDe = listaMovDe;
         
         initComponents();
-        
-        String[] titulos = {"Fecha","Encabezado","Codigo","Nombre","Tipo Movimiento","Cantidad"};
+        //  Constructor se incializan los nombres Object[]{}, y se indica que inicia con 0 filas 
         modeloMovProductos = new DefaultTableModel(new Object[]{"Fecha"
                                                                                                             ,"Encabezado"
                                                                                                             ,"Codigo"
@@ -43,19 +42,37 @@ public class verHistoriales extends javax.swing.JDialog {
                                                                                                             ,"Tipo Movimiento"
                                                                                                             ,"Cantidad"},0){
                 @Override
+                /*
+                    DefaultTableModel, trata por defecto a todas las columnas como Object
+                    Utilizando getColumnClass, se indica que tipo de dato tiene cada columna
+                    
+                    De esta manera cuando utilicemos el TableRowSorter, reconocerá automaticamente
+                    el tipo de dato de cada columna y aplicara el orden adecuado.
+                */
                 public Class<?> getColumnClass(int columnIndex) {
-                    if (columnIndex == 0) return Date.class; // primera columna es Date
-                    if (columnIndex == 5) return Integer.class; // ejemplo: cantidad numérica
-                    return String.class;
+                        if (columnIndex == 0) return Date.class; // primera columna es Date
+                        if (columnIndex == 5) return Integer.class; // ejemplo: cantidad numérica
+                        return String.class;
                 }
         };
-        
         movimientosPorProductoTabla.setModel(modeloMovProductos);
+    
+        /*
+            Se crea un objeto TableRowSorter, indicando que trabajara con un DefaultTableModel,
+            despues se pasa la instancia del modelo de datos. Esto poermite que la tabla se pueda
+            ordenar dinamicamente por cualquer columna.
+        */
         TableRowSorter<DefaultTableModel> sorter  = new TableRowSorter<>(modeloMovProductos);
         movimientosPorProductoTabla.setRowSorter(sorter);
+        /*
+            Se crea una lista de SortKey
+            Cada uno de estos indica, que columna ordenerá y cual es si direccoón de orden
+        */
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
+        //  Asigna las claves al Sorter
         sorter.setSortKeys(sortKeys);
+        //  Fuerza al programa a ordernar según las claves definadas
         sorter.sort();
         
         movimientosPorProductoTabla.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
@@ -104,13 +121,25 @@ public class verHistoriales extends javax.swing.JDialog {
             for(producto p : listaProductos){
                 if(p.getCodigo().trim().equals(detalle.getCodigoProducto().trim())){
                     String tipoMovimiento = detalle.getEncabezado().getTipoMovimiento() + ": " + detalle.getEncabezado().getMotivo();
+                    
+                    //Se obtiene la fecha(En String) del detalle
                     String fechaTexto = detalle.getEncabezado().getFecha();
+                    //Se declara un objeto Date, para que exista fuera del try-catch
                     Date fecha = null;
-                    SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.ENGLISH);
+                    /*Se declara un SimpleDateFormat para darle el formato necesario para poder 
+                      convertir el string en un date
+                    
+                      El construtor recibe un patron("EEE MMM dd HH:mm:ss z yyyy"), que coincide
+                      exactamente con lo que se recibe del Spinner. Por ultimo se usa Locale, porque
+                      los nombres de los dias y mes están en ingles 
+                    */
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",
+                                                                                                   java.util.Locale.ENGLISH);
                      try {
-                        fecha = sdf.parse(fechaTexto);
+                          //Se convierte el string a un tipo Date, utilizando parse
+                          fecha = sdf.parse(fechaTexto);
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                           e.printStackTrace();
                     }
                     modeloMovProductos.addRow(new Object[]{fecha
                                                                                 ,detalle.getEncabezado().getIdentificador()
@@ -126,7 +155,6 @@ public class verHistoriales extends javax.swing.JDialog {
     }
    public void filtrarTabla() throws java.text.ParseException{
        String parametro = campoDeBusquedaTxt.getText();
-       
        if(parametro.isEmpty()){
            llenarTabla();
        }else{
@@ -141,7 +169,8 @@ public class verHistoriales extends javax.swing.JDialog {
                             }else{
                                 tipoMovimiento = detalle.getEncabezado().getTipoMovimiento();
                             }
-                            String fechaTexto = detalle.getEncabezado().getFecha();
+                            String fechaTexto = detalle.getEncabezado().getFecha();    
+                            // Misma Lógica implementada en el método llenarTabla()
                             Date fecha = null;
                             SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.ENGLISH);
                              try {
@@ -149,8 +178,7 @@ public class verHistoriales extends javax.swing.JDialog {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            
-                            
+                                  
                             modeloMovProductos.addRow(new Object[]{fecha
                                                                                         ,detalle.getEncabezado().getIdentificador()
                                                                                         ,detalle.getCodigoProducto()

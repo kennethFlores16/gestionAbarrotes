@@ -101,6 +101,7 @@ public class panelMovimientos extends javax.swing.JPanel {
             tablaStockActual.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
         
+       //Declaración del Listener para que cuando se seleccione una fila suceda una acción
         tablaMovimientos.getSelectionModel().addListSelectionListener(e -> {
                 // Habilitar solo si hay una fila seleccionada
                 filaSeleccionada = tablaMovimientos.getSelectedRow();
@@ -819,7 +820,7 @@ public class panelMovimientos extends javax.swing.JPanel {
             
             if(p.getStockMinimo() > p.getStockActual() && p.getStockActual()> 0){
                 stock = "Bajo";
-            }else if(p.getStockActual() == 0){
+            }else if(p.getStockActual() < 1){
                 stock = "Agotado";
             }else if(p.getStockActual() >= (p.getStockMinimo()*3)){
                 stock = "Sobreinventario";
